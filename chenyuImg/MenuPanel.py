@@ -13,11 +13,11 @@ class MenuPanel(Panel):
   def __init__(self, app, size: Vector2):
     super().__init__(app, size)
   
-  def setup(self):
+  def setup(self, pos_x, pos_y):
     super().setup()
     
     self.master = tk.Frame(width=self.size.x, height=self.size.y, background='#111111', highlightbackground='#111111')
-    self.master.pack(side=tk.LEFT)
+    self.master.place(x = pos_x, y = pos_y)
     self.register(self.master)
     
     t = tk.Button(master = self.master, text='Adjust', command=self.open_adjust_panel, highlightbackground='#111111')

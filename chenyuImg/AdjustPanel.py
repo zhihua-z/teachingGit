@@ -6,16 +6,19 @@ import process
 
 from Panel import Panel
 from CYMath import Vector2
+from Layer import Layer
+
+from Mystring import find_last_of
 
 class AdjustPanel(Panel):
   def __init__(self, app, size: Vector2):
     super().__init__(app, size)
   
-  def setup(self):
+  def setup(self, pos_x, pos_y):
     super().setup()
     
     self.master = tk.Frame(width=self.size.x, height=self.size.y)
-    self.master.pack(side=tk.LEFT)
+    self.master.place(x = pos_x, y = pos_y)
     self.register(self.master)
     
     self.register(self.master)
@@ -26,6 +29,11 @@ class AdjustPanel(Panel):
     self.btn_open = tk.Button(master = self.master, text='open', command=self.ask_open_file)
     self.btn_open.place(x=10, y=10)
     self.register(self.btn_open)
+    
+    
+    t = tk.Button(master = self.master, text='import', command=self.ask_open_file_import)
+    t.place(x=90, y=10)
+    self.register(t)
     
     # self.button_A = Button(self.adjust_panel, 'open', self.ask_open_file, (10, 10))
             
@@ -89,8 +97,12 @@ class AdjustPanel(Panel):
       self.app.original_image = self.app.original_image.resize(new_sz, resample = Image.Resampling.BICUBIC)
       self.app.current_image = self.app.original_image
       
+      # remove the full path from file name
+      last_pos = find_last_of(self.app.filename, '/')
+      layername = self.app.filename[last_pos + 1:]
+      
       # 管理layer
-      l = Layer(self.app.original_image)
+      l = Layer(self.app.original_image, layername)
       
       # 删掉之前的layer
       self.app.layer = self.app.layer[:-1]
@@ -98,6 +110,30 @@ class AdjustPanel(Panel):
       self.app.current_layer_index = 0
 
       self.app.render_image(self.app.original_image)
+      self.app.layer_panel.setup(0, 600)
+      
+  def ask_open_file_import(self):
+      self.app.filename = askopenfilename(filetypes=[("Image files","*.bmp *.png *.jpg *.webp")])
+
+      # imagename = './clock.jpg'
+      if len(self.app.filename) == 0:
+          return
+      
+      self.app.original_image = Image.open(self.app.filename)
+      
+      # remove the full path from file name
+      last_pos = find_last_of(self.app.filename, '/')
+      layername = self.app.filename[last_pos + 1:]
+      
+      # 管理layer
+      l = Layer(self.app.original_image, layername)
+      
+      # 删掉之前的layer
+      self.app.layer.append(l)
+      self.app.current_layer_index = len(self.app.layer) - 1
+
+      self.app.update_render()
+      self.app.layer_panel.setup(0, 600)
 
   def on_scale_brightness_changed(self, value):
       value = int(value)

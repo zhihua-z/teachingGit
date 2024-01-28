@@ -149,6 +149,7 @@ def create_crop_layer(img, mode, val, pt, newLayer):
                     
     return img_t
 
+# 渲染出当前照片和crop layer
 def render_crop(img, cropimg):
     img_t = img.copy()
     for yi in range(img_t.height):
@@ -160,12 +161,32 @@ def render_crop(img, cropimg):
                     
     return img_t
 
+# 把crop a layer 和crop b layer 融合起来
 def merge_crop(imgA, imgB):
+    # 把img A 抄成 img_t
     img_t = imgA.copy()
     for yi in range(img_t.height):
         for xi in range(img_t.width):
             p2 = imgB.getpixel((xi, yi))
             if p2 == (0, 0, 0):
                 img_t.putpixel((xi, yi), p2)
+                # 把img B的内容抄去img t
                     
     return img_t
+  
+def crop_image(img, Apos, Bpos):
+    # 1. 当你看到一个白色像素点的时候，记下当前 x1
+    # 2. 然这一条白色像素点结束的时候，记下当前 x2
+    # 3. width = x2 - x1 + 1
+    
+    img_t = Image.new(mode = 'RGB', size = (Bpos[0] - Apos[0] + 1, Bpos[1] - Apos[1] + 1), color=(255, 255, 255))
+    start_x = Apos[0]
+    start_y = Apos[1]
+    
+    for yi in range(Apos[1], Bpos[1] + 1):
+      for xi in range(Apos[0], Bpos[0] + 1):
+        p = img.getpixel((xi, yi))
+        img_t.putpixel((xi - start_x, yi - start_y), p)
+        
+    return img_t
+    

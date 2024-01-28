@@ -1,0 +1,132 @@
+from math import e
+import tkinter as tk
+from tkinter.filedialog import askopenfilename, asksaveasfile, asksaveasfilename
+from PIL import Image
+from PIL import ImageTk
+import process
+
+class Position:
+  def __init__(self, x, y):
+    self.x = x
+    self.y = y
+
+class ButtonGroupValInt:
+  # 创建一个btnGroupValInt物体
+  def __init__(self, frame, lblText, btnText, basePosition, fn):
+    self.p = basePosition
+    self.f = frame
+    self.lt = lblText
+    self.bt = btnText
+    self.bp = basePosition
+    self.fn = fn
+
+    self.lblBrightness = None
+    self.entryBrightness = None
+    self.btnBrighness = None
+
+  # 渲染这个物体
+  def show(self):
+    
+    if self.lblBrightness is not None:
+      self.lblBrightness.destroy()
+    
+    if self.entryBrightness is not None:
+      self.entryBrightness.destroy()
+
+    if self.btnBrighness is not None:
+      self.btnBrighness.destroy()
+
+    self.lblBrightness = tk.Label(master=self.f, text=self.lt)
+    self.lblBrightness.place(x = self.p.x, y = self.p.y)
+
+    self.entryBrightness = tk.Entry(master=self.f, width=5)
+    self.entryBrightness.place(x = self.p.x + 90, y = self.p.y)
+
+    self.btnBrighness = tk.Button(master=self.f, text=self.bt, command=self.fn)
+    self.btnBrighness.place(x = self.p.x, y = self.p.y + 30)
+
+
+# main app window
+myWindow = tk.Tk()
+current_file = ''
+lblImage = None
+o_img = None
+t_img = None
+
+def open_a_file():
+  global lblImage, o_img, t_img
+
+  current_file = askopenfilename()
+
+  o_img = Image.open(current_file)
+  t_img = o_img
+  img1 = ImageTk.PhotoImage(o_img)
+
+  if len(current_file) != 0 and lblImage is not None:
+    lblImage.destroy()
+
+  lblImage = tk.Label(master=frame_main, image=img1)
+  lblImage.image = img1
+  lblImage.place(x = 0, y = 0)
+
+def save_a_file():
+  global t_img
+
+  current_file = asksaveasfilename()
+  t_img.save(current_file)
+
+def adjust_brighness():
+  global lblImage, o_img, t_img
+
+  val = int(brightness.entryBrightness.get())
+
+  t_img = process.adjust_brightness(o_img, val)
+  img1 = ImageTk.PhotoImage(t_img)
+
+  if len(current_file) != 0 and lblImage is not None:
+    lblImage.destroy()
+
+  lblImage = tk.Label(master=frame_main, image=img1)
+  lblImage.image = img1
+  lblImage.place(x = 0, y = 0)
+
+def adjust_saturation():
+  return
+
+
+
+# Frame : div 
+frame_main = tk.Frame(width=1000, height=800)
+frame_main.pack(side=tk.LEFT)
+
+frame_right = tk.Frame(width=300, height=800)
+frame_right.pack(side=tk.LEFT)
+
+btnOpen = tk.Button(master=frame_right, text='open file', command=open_a_file)
+btnOpen.place(x = 10, y = 30)
+
+btnSave = tk.Button(master=frame_right, text = 'save file', command=save_a_file)
+btnSave.place(x = 100, y = 30)
+
+brightness = ButtonGroupValInt(frame_right, 'Brightness', 'Adjust Brightness', Position(10, 70), adjust_brighness)
+brightness.show()
+
+saturation = ButtonGroupValInt(frame_right, 'Saturation', 'Adjust Saturation', Position(10, 130), adjust_saturation)
+saturation.show()
+
+myWindow.mainloop()
+
+
+'''
+Homework
+
+Research on how saturation of an image is adjusted and implement saturation function
+
+
+Homework 2 (optional)
+
+Research on how contrast is done and do it
+
+
+'''
+

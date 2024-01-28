@@ -7,16 +7,9 @@ from AdjustPanel import AdjustPanel
 from CropPanel import CropPanel
 from EffectPanel import EffectPanel
 from MenuPanel import MenuPanel
+from LayerPanel import LayerPanel
 
-class Layer:
-    def __init__(self, img=None):
-        self.image = img
-        self.brightness_val = 0
-        self.result_image = None
-
-    def render(self):
-        self.result_image = process.adjust_brightness(self.image, self.brightness_val)
-        return self.result_image
+from Layer import Layer
 
 class Application:
     def __init__(self):
@@ -25,11 +18,17 @@ class Application:
         self.current_image = None
         self.layer = []
         self.current_layer_index = None
+        self.lblImage = None
+        
         self.crop_A_layer = None
         self.crop_B_layer = None
-        self.lblImage = None
         self.on_selecting_A = False
         self.on_selecting_B = False
+        self.A_pos = None
+        self.B_pos = None
+        
+        self.click_pos = None
+        
         self.control_down = False
         self.viewport_width = 0
         self.viewport_height = 0
@@ -37,6 +36,7 @@ class Application:
         self.effect_panel = EffectPanel(self, Vector2(400, 600))
         self.crop_panel = CropPanel(self, Vector2(400, 600))
         self.menu_panel = MenuPanel(self, Vector2(100, 600))
+        self.layer_panel = LayerPanel(self, Vector2(1300, 120))
         self.vp_list = []
 
     def register(self, frame, tkComp):
@@ -45,10 +45,11 @@ class Application:
 
     def setup(self):
         self.window = tk.Tk()
+        self.window.geometry('1300x720')
 
-        self.menu_panel.setup()
+        self.menu_panel.setup(0, 0)
         self.viewport = tk.Frame(width=800, height=600)
-        self.viewport.pack(side=tk.LEFT)
+        self.viewport.place(x=100, y=0)
         self.viewport_width = 800
         self.viewport_height = 600
 
@@ -56,7 +57,8 @@ class Application:
         self.window.bind('<KeyPress>', self.key_press)
         self.window.bind('<KeyRelease>', self.key_released)
 
-        self.adjust_panel.setup()
+        self.adjust_panel.setup(900, 0)
+        self.layer_panel.setup(0, 600)
 
     def switch(self, panel_name):
         self.adjust_panel.clear()
@@ -64,11 +66,11 @@ class Application:
         self.crop_panel.clear()
 
         if panel_name == 'adjust_panel':
-            self.adjust_panel.setup()
+            self.adjust_panel.setup(900, 0)
         elif panel_name == 'effect_panel':
-            self.effect_panel.setup()
+            self.effect_panel.setup(900, 0)
         elif panel_name == 'crop_panel':
-            self.crop_panel.setup()
+            self.crop_panel.setup(900, 0)
 
     def key_press(self, event):
         print(event)
@@ -80,9 +82,27 @@ class Application:
         self.window.mainloop()
 
     def update_render(self):
+        # update and merge all layers
         layer = self.layer[self.current_layer_index]
         result_image = layer.render()
+        
+        '''
+        for layer in self.layer:
+          layer.render()
+          
+        # merge
+        prepare a new image t1
+        
+        for each layer in self.layer:
+          merge layer.result_image onto t1
+        
+        render this t1 onto the screen
+        
+        
+        '''
+        
 
+        # if cropping add crop layer on top of the merged result
         if self.crop_A_layer is not None and self.crop_B_layer is not None:
             merged_crop_image = process.merge_crop(self.crop_A_layer.image, self.crop_B_layer.image)
             result_image = process.render_crop(result_image, merged_crop_image)
@@ -91,6 +111,7 @@ class Application:
         elif self.crop_B_layer is not None:
             result_image = process.render_crop(result_image, self.crop_B_layer.image)
 
+        # display final result
         self.render_image(result_image)
 
     def destroy_if_have(self, component):
@@ -120,6 +141,9 @@ class Application:
         return [screen_position[0] + cx, screen_position[1] + cy]
 
     def handle_mouse_click(self, event):
+        
+        self.click_pos = (event.x, event.y)
+        
         if self.on_selecting_A:
             self.on_selecting_A = False
             img_pos = self.screen_position_to_image_position((event.x, event.y))
@@ -128,6 +152,8 @@ class Application:
             self.crop_A_layer.image = process.create_crop_layer(current_layer.image, 'h', img_pos[1], 'A', True)
             self.crop_A_layer.image = process.create_crop_layer(self.crop_A_layer.image, 'v', img_pos[0], 'A', False)
             self.update_render()
+            self.A_pos = img_pos
+            
         elif self.on_selecting_B:
             self.on_selecting_B = False
             img_pos = self.screen_position_to_image_position((event.x, event.y))
@@ -136,6 +162,7 @@ class Application:
             self.crop_B_layer.image = process.create_crop_layer(current_layer.image, 'h', img_pos[1], 'B', True)
             self.crop_B_layer.image = process.create_crop_layer(self.crop_B_layer.image, 'v', img_pos[0], 'B', False)
             self.update_render()
+            self.B_pos = img_pos
 
     def export_cropped_image(self, export_path):
         if self.crop_A_layer is not None:

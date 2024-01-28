@@ -5,16 +5,15 @@ import process
 from Panel import Panel
 from CYMath import Vector2
 
-
 class CropPanel(Panel):
     def __init__(self, app, size: Vector2):
         super().__init__(app, size)
 
-    def setup(self):
+    def setup(self, pos_x, pos_y):
         super().setup()
 
         self.master = tk.Frame(width=self.size.x, height=self.size.y)
-        self.master.pack(side=tk.LEFT)
+        self.master.place(x = pos_x, y = pos_y)
         self.register(self.master)
 
         t = tk.Label(master=self.master, text='this is crop panel')
@@ -32,22 +31,20 @@ class CropPanel(Panel):
         self.register(self.btn_export)
 
     def on_crop_A_pressed(self):
-        self.on_selecting_A = True
-        self.on_selecting_B = False
+        self.app.on_selecting_A = True
+        self.app.on_selecting_B = False
 
     def on_crop_B_pressed(self):
-        self.on_selecting_A = False
-        self.on_selecting_B = True
+        self.app.on_selecting_A = False
+        self.app.on_selecting_B = True
 
     def on_export_pressed(self):
-        if self.app.crop_A_layer is not None:
-            cropped_image = self.app.crop_A_layer.image
-        elif self.app.crop_B_layer is not None:
-            cropped_image = self.app.crop_B_layer.image
-        else:
-            return
+        
+        result_image = process.crop_image(self.app.current_image, self.app.A_pos, self.app.B_pos)
 
         export_path = asksaveasfilename(defaultextension=".png", filetypes=[("PNG files", "*.png")])
         if export_path:
-            cropped_image.save(export_path)
+            result_image.save(export_path)
             print(f"Image exported to: {export_path}")
+        
+        

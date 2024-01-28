@@ -15,11 +15,11 @@ class EffectPanel(Panel):
     # below is your own button panel stuffs
     pass
   
-  def setup(self):
+  def setup(self, pos_x, pos_y):
     super().setup()
     
     self.master = tk.Frame(width=self.size.x, height=self.size.y)
-    self.master.pack(side=tk.LEFT)
+    self.master.place(x = pos_x, y = pos_y)
     self.register(self.master)
     
     t = tk.Label(master=self.master, text='this is effect panel')
