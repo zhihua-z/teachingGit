@@ -44,9 +44,6 @@ class Juese:
     self.chushi_hp = self.hp
 
   def gongji(self, mubiao):
-    
-    #        -------------   检查双方的状态
-    
     if self.jiancha_zhuangtai() == False:
       print(f'{self.mingzi}已经死了，无法攻击')
       return
@@ -55,9 +52,7 @@ class Juese:
       print(f'{mubiao.mingzi}已经死了，无法攻击')
       return
 
-    
-    
-    #        -------------   计算出本次攻击的数值
+    print(f'{mubiao.mingzi}被{self.mingzi}打了一下')
     # 普通攻击的最终数值=攻击力 * (1 + 自己的等级*2%) - 目标的防御力 * (60% + 目标的等级*2%)
     #                 ^A                          ^B
     # 最后的攻击力=A-B
@@ -71,14 +66,8 @@ class Juese:
 
     # max：最大，会返回后面两个值中比较大的一个数字
     gongjizhi = max(gongjizhi, 0)
-    
-    
-    
-    #        -------------   打它
-    print(f'{mubiao.mingzi}被{self.mingzi}打了一下')
     print(f'此次攻击打出了{gongjizhi}点伤害')
 
-    # 扣对方的生命
     if gongjizhi > 0:
       mubiao.hp -= gongjizhi
       mubiao.hp = max(mubiao.hp, 0)
@@ -86,15 +75,31 @@ class Juese:
     #print(mubiao.mingzi, '还剩', mubiao.hp, '点血')
     # f-string, f字符串，f：format，有格式的字符串
     print(f'{mubiao.mingzi}还剩{mubiao.hp}点血')
-    
-    
-    
-    
-    #        -------------   检查状态，处理后事
     mubiao.gengxin_zhuangtai()
     mubiao.shuofeihua(gongjizhi)
     mubiao.print_zhuangtai()
+    #写个函数【是否可以使用招数】
+  def check(self,leixing,xiaohao,a,hp,mp,tl):
+    if(self.leixing=='f'):
+      if(a.mp>=self.xiaohao):
+        True
+      else:
+        pass
+    elif(self.leixing=='s'):
+      if(a.hp>=self.xiaohao):
+        True
+      else:
+        pass 
+    elif(self.leixing=='t'):
+      if(a.tl>=self.xiaohao):
+        True
+      else:
+        pass      
+  
 
+  #在写个函数：用招数攻击
+  def use(self,gongji,a,gj):
+    a.gj+=self.gongji
   def fangzhaoshu(self, mubiao):
     # 如果我有招数的话，我就使用列表里第一个招数
     # 如果我没有招数，我就转成使用普通攻击
@@ -119,7 +124,9 @@ class Juese:
         z = self.zhao[1]
       else:
         z = self.zhao[0]
-
+  
+  
+  
       # 如果够的话，再用这个招数
       if z.check(self):
         z.use(self, mubiao)
