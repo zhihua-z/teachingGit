@@ -1,0 +1,159 @@
+'''
+我们会模拟制作这样的文字游戏，你需要定义一些角色类型，招数类型
+每一个角色都有一些基础的属性：
+帮派
+生命值
+法力
+体力
+攻击力
+防御力
+招数 ： 列表
+
+
+每一个招数都有一些以下属性：
+招数的名字
+攻击力
+消耗
+消耗类型（法力/生命/体力）
+
+普通攻击的最终数值=攻击力 * (1 + 自己的等级*2%) - 目标的防御力 * (60% + 目标的等级*2%)
+
+招数攻击的最终树枝=招数的攻击力
+
+'''
+from Juese import Juese
+from Zhaoshu import Zhaoshu
+from zhuangbei import zhuangbei
+
+# bhlhwwdzgong = Zhaoshu('八荒六合唯我独尊功', 30, 20, 's')
+# zhlxy = Zhaoshu('召唤李逍遥', 90, 70, 's')
+# dajingangzhang = Zhaoshu('大金刚掌', 20, 20, 't')
+
+# guangling = Juese('广陵', '逍遥派', 1, 80, 0, 40, 25, 8, [zhlxy, bhlhwwdzgong])
+# xuanzang = Juese('玄奘', '少林寺', 1, 100, 0, 40, 20, 15, [dajingangzhang])
+
+
+def find_name(biao, n):
+  for item in biao:
+    if item.name == n:
+      return item
+
+  return None
+
+
+#               加载招数
+
+# 创建一个招数列表
+zhaoshu_biao = []
+
+# 加载我们的招数
+f = open('zhaoshu.txt', 'r')
+lines = f.readlines()
+
+for i in range(0, len(lines), 4):
+  m = lines[i].strip()
+  g = lines[i + 1].strip()
+  x = lines[i + 2].strip()
+  l = lines[i + 3].strip()
+
+  zhao = Zhaoshu(m, g, x, l)
+  zhaoshu_biao.append(zhao)
+'''
+[<Zhaoshu.Zhaoshu object at 0x7f603b5d4d30>, <Zhaoshu.Zhaoshu object at 0x7f603b4040d0>, <Zhaoshu.Zhaoshu object at 0x7f603b404130>]
+'''
+print(zhaoshu_biao)
+'''
+八荒六合唯我独尊功
+召唤李逍遥
+大金刚掌
+'''
+for x in zhaoshu_biao:
+  print(x)
+
+#               加载装备
+
+zhuangbei_biao = []
+f = open('zhuangbei.txt', 'r')
+lines = f.readlines()
+for i in range(0, len(lines), 6):
+  t1 = lines[i].strip()
+  t2 = lines[i + 1].strip()
+  t3 = lines[i + 2].strip()
+  t4 = lines[i + 3].strip()
+  t5 = lines[i + 4].strip()
+  t6 = lines[i + 5].strip()
+
+  z = zhuangbei(t1, t2, t3, t4, t5, t6)
+  zhuangbei_biao.append(z)
+
+for x in zhuangbei_biao:
+  print(x)
+
+#                加载角色
+
+juese_biao = []
+f = open('juese.txt', 'r')
+lines = f.readlines()
+for i in range(0, len(lines), 10):
+  jm = lines[i].strip()
+  jp = lines[i + 1].strip()
+  jlv = lines[i + 2].strip()
+  jhp = lines[i + 3].strip()
+  jmp = lines[i + 4].strip()
+  jtl = lines[i + 5].strip()
+  jgj = lines[i + 6].strip()
+  jfy = lines[i + 7].strip()
+
+  jzhao_zi = lines[i + 8].strip().split(',')
+  jzhao = []
+
+  for z in jzhao_zi:
+    zz = find_name(zhaoshu_biao, z)
+    if zz:
+      jzhao.append(zz)
+
+  jzhuang_zi = lines[i + 9].strip().split(',')
+  jzhuang = []
+
+  for z in jzhuang_zi:
+    zz = find_name(zhuangbei_biao, z)
+    if zz:
+      jzhuang.append(zz)
+
+  ju = Juese(jm, jp, jlv, jhp, jmp, jtl, jgj, jfy, jzhao, jzhuang)
+  juese_biao.append(ju)
+
+for x in juese_biao:
+  print(x)
+
+# while xuanzang.huozhe and guangling.huozhe:
+#   xuanzang.fangzhaoshu(guangling)
+#   guangling.fangzhaoshu(xuanzang)
+
+# print('游戏结束')
+# if xuanzang.huozhe:
+#   print(f'{xuanzang.mingzi}赢了')
+# if guangling.huozhe:
+#   print(f'{guangling.mingzi}赢了')
+'''
+作业:
+写一个新的class：装备
+装备可以增强角色的一个属性，比如攻击，或者防御
+ leixing: 'h' : 生命
+          'm' : 法力
+          'f' : 防御
+ mingzi: ...
+ shuzhi: 50
+
+角色除了招数列表以外，还应该有一个装备列表，并且这个装备要参与到计算公式中
+
+
+普通攻击的最终数值=攻击力 * (1 + 自己的等级*2%) - 目标的防御力 * (60% + 目标的等级*2%) - 目标装备的防御力 + 自己装备的攻击力
+
+招数攻击的最终数值 = 招数的攻击力 - 目标装备的防御力 + 自己装备的攻击力
+
+
+作业2 提前预习一下json库 (可选)
+import json
+
+'''

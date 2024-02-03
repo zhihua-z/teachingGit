@@ -1,0 +1,31 @@
+input[type="user"], input[type="text"] {
+    width: 320px;
+    align-items: center;
+    padding: 10px;
+    margin-bottom: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    color: white;
+    background-color: #2B2C30;
+}
+
+textarea {
+    width: 500px;
+    color: white;
+    background-color: #2B2C30;
+}
+
+/* Style the submit button */
+button[type="submit"] {
+    background-color: #007bff;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.pre_content {
+    background-color: #2B2C30;
+    color: white;
+}

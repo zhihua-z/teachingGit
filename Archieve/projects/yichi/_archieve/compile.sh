@@ -1,0 +1,1 @@
+gcc -Wall -ansi -pedantic lesson1.c -o output.out
