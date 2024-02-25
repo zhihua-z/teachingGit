@@ -25,17 +25,23 @@ class LayerPanel(Panel):
     curr_position = (10, 10)
     # for each layer the application have, make a new layer button
     for layer in self.app.layer:
-      t = tk.Button(master = self.master, text=layer.name, command=self.switchlayer)
+      t = tk.Button(master = self.master, text=layer.name, command=lambda l=layer:self.switchlayer(l))
       t.place(x = curr_position[0], y = curr_position[1])
       self.register(t)
       
       curr_position = (curr_position[0] + 100, curr_position[1])
     
-  def switchlayer(self):
+  def switchlayer(self, layer):
     pos_x = self.app.click_pos[0]
     pos_x = pos_x - 10
     
-    layer_index = (pos_x - 1) / 100
+    
+    layer_index = 0
+    
+    # 找这个layer index
+    for l in self.app.layer:
+      if l.name == layer.name:
+        layer_index = self.app.layer.index(l)
     
     self.app.current_layer_index = layer_index
     self.app.update_render()

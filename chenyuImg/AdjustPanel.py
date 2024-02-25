@@ -143,18 +143,45 @@ class AdjustPanel(Panel):
       self.update_render()
 
   def on_extract_red_press(self):
-      self.app.current_image = process.extract_channel(self.app.original_image, 'r')
-      self.app.render_image(self.app.current_image)
+      layer = self.app.layer[self.app.current_layer_index]
+      
+      if layer:
+        if layer.channel & Layer.red:
+          layer.channel = layer.channel - Layer.red
+        else:
+          layer.channel = layer.channel + Layer.red
+          
+        # layer.channel |= Layer.red
+      
+      self.app.update_render()
   
   def on_extract_green_press(self):
-      self.current_image = process.extract_channel(self.original_image, 'g')
-      self.render_image(self.current_image)
+      layer = self.app.layer[self.app.current_layer_index]
+      
+      if layer:
+        if layer.channel & Layer.green:
+          layer.channel = layer.channel - Layer.green
+        else:
+          layer.channel = layer.channel + Layer.green
+      
+      self.app.update_render()
       
 
   def on_extract_blue_press(self):
-      self.current_image = process.extract_channel(self.original_image, 'b')
-      self.render_image(self.current_image)
+      layer = self.app.layer[self.app.current_layer_index]
+      
+      if layer:
+        if layer.channel & Layer.blue:
+          layer.channel = layer.channel - Layer.blue
+        else:
+          layer.channel = layer.channel + Layer.blue
+      
+      self.app.update_render()
 
   def on_extract_original_press(self):
-      self.current_image = process.extract_channel(self.original_image, 'rgb')
-      self.render_image(self.current_image)
+      layer = self.app.layer[self.app.current_layer_index]
+      
+      if layer:
+        layer.channel = 15
+      
+      self.app.update_render()

@@ -97,14 +97,12 @@ def extract_channel(img, channel):
       for xi in range(img.width):
           p = img.getpixel((xi, yi))
           val = (0, 0, 0)
-          if channel == 'r':
-             val = (p[0], 0, 0)
-          elif channel == 'g':
-             val = (0, p[1], 0)
-          elif channel == 'b':
-             val = (0, 0, p[2])
-          elif channel == 'rgb':
-             val = p
+          if channel & 8 != 0:
+             val = (p[0], val[1], val[2])
+          if channel & 4 != 0:
+             val = (val[0], p[1], val[2])
+          if channel & 2 != 0:
+             val = (val[0], val[1], p[2])
 
           img_t.putpixel((xi, yi), val)
       
