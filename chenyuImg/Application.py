@@ -3,11 +3,11 @@ from PIL import Image, ImageTk
 from tkinter.filedialog import askopenfilename, asksaveasfilename
 import process
 from CYMath import Vector2
-from AdjustPanel import AdjustPanel
-from CropPanel import CropPanel
-from EffectPanel import EffectPanel
-from MenuPanel import MenuPanel
-from LayerPanel import LayerPanel
+from Pages.AdjustPanel import AdjustPanel
+from Pages.CropPanel import CropPanel
+from Pages.EffectPanel import EffectPanel
+from Pages.MenuPanel import MenuPanel
+from Pages.LayerPanel import LayerPanel
 
 from Layer import Layer
 
