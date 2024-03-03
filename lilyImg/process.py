@@ -42,6 +42,24 @@ def pixel_min_index(p):
     else:
         return 2
 
+def adjust_saturation(img, saturation):
+    t_img = img.copy()
+    # 调整亮度就是把照片里每一个像素点的颜色变亮/暗
+
+    for y in range(t_img.height):
+        for x in range(t_img.width):
+            p = t_img.getpixel((x, y))
+            
+            # calculate mean value of r g b
+            if saturation < 0 :
+                ....
+            else:
+                ....
+            
+            t_img.putpixel((x, y), p)
+
+    return t_img
+    
 
 def adjust_brightness(img, val):
     t_img = img.copy()

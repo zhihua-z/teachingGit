@@ -13,3 +13,5 @@ class Panel:
     
   def register(self, comp):
     self.comp_list.append(comp)
+
+# useless comment

@@ -29,15 +29,15 @@ class AdjustPanel(Panel):
         t.place(x=100, y=30)
         self.register(t)
 
-        self.brighness = ButtonGroupValInt(
+        self.brightness = ButtonGroupValInt(
             self.frame,
             "Brightness",
             "Adjust Brightness",
             Position(10, 70),
-            self.adjust_brighness,
+            self.adjust_brightness,
         )
-        self.brighness.show()
-        self.register(self.brighness)
+        self.brightness.show()
+        self.register(self.brightness)
 
         self.saturation = ButtonGroupValInt(
             self.frame,
@@ -79,7 +79,7 @@ class AdjustPanel(Panel):
         self.app.current_file = asksaveasfilename()
         self.app.current_image.save(self.app.current_file)
 
-    def adjust_brighness(self):
+    def adjust_brightness(self):
         val = int(self.brightness.entry.get())
 
         l = self.app.layer[self.app.current_layer_index]
