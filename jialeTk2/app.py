@@ -48,3 +48,6 @@ class App:
             
         if pageName == '网络连接':
             self.connectionPage.draw()
+        
+    def findRouter(self, luyouqi_name):
+        return self.routerPage.findRouter(luyouqi_name)

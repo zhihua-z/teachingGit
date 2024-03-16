@@ -28,7 +28,6 @@ class DNSServerPage(Page):
         self.frame = tk.Frame(width=self.width, height=self.height, background=self.backgroundColor)
         self.frame.place(x = self.posX, y = self.posY)
         
-        
         t3 = tk.Label(master=self.frame, text='ip', background=self.backgroundColor)
         t3.place(x = 450, y = 10)
         self.ip = tk.Entry(master=self.frame, background=self.backgroundColor)

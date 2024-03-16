@@ -57,3 +57,10 @@ class RouterPage(Page):
             
             
             start_pos_y += 100
+        
+    def findRouter(self, luyouqi_name):
+        for x in self.router_list:
+            if x.name == luyouqi_name:
+                return x
+            
+        return None

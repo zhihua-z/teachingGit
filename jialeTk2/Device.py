@@ -36,6 +36,7 @@ class InternetDevice(Device):
       print('无网络连接')
 
   def connect(self, luyouqi):
+    
     # 元组赋值
     self.ip, self.router = luyouqi.connect(self)
 
