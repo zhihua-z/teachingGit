@@ -8,6 +8,8 @@ class WriteArea(Page):
         self.content = None
     
     def draw(self):
+        self.clear()
+        
         self.frame = tk.Frame(width=800, height=700)
         self.frame.place(x=150, y=0)
         self.register(self.frame)

@@ -10,6 +10,9 @@ class ContentPage(Page):
         self.frame = None
     
     def draw(self):
+        self.clear()
+        
         self.frame = tk.Frame(width=150, height=700, background='#dddddd')
         self.frame.place(x=0, y=0)
         self.register(self.frame)
+        

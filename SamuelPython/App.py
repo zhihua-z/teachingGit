@@ -38,8 +38,6 @@ class App:
         self.writeArea.draw()
         self.toolPage.draw()
         self.statusBar.draw()
-        
-        # self.contentPage.clear()
     
     def getPage(self, pageName):
         if pageName == 'WriteArea':

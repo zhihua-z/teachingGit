@@ -1,66 +1,83 @@
 import tkinter as tk
 from tkinter.filedialog import askopenfilename, asksaveasfilename
+
 from Page import Page
+
+from UI.ImageButton import ImageButton
 
 class ToolPage(Page):
     
     def __init__(self, app):
+        super().__init__(app)
         self.open_file_button = None
         self.right_panel_color = '#cccccc'
         self.app = app
     
     def draw(self):
+        self.clear()
+        
         self.frame = tk.Frame(background=self.right_panel_color, width=400, height=700)
         self.frame.place(x=950, y=0)
+        self.register(self.frame)
         
-        self.open_file_button = tk.Button(
+        t = ImageButton(
+            master=self.frame, 
+            filename='folder.png', 
+            size=(25, 25), 
+            position=(10, 500), 
+            command=self.open_file)
+        self.registerUI(t)
+        
+        
+        t = tk.Button(
             master=self.frame, 
             text='open file', 
             highlightbackground=self.right_panel_color,
             command=self.open_file, 
             )
-        self.open_file_button.place(x = 10, y = 10)
-        # self.register(self.open_file_button)
+        t.place(x = 10, y = 10)
+        self.register(t)
 
-        self.save_file_button = tk.Button(
+        t = tk.Button(
             master = self.frame,
             text = "save file",
             highlightbackground = self.right_panel_color,
             command = self.save_file, 
         )
-        self.save_file_button.place(x = 110, y = 10)
-        # self.register(self.save_file_button)
+        t.place(x = 110, y = 10)
+        self.register(t)
 
-        self.font_panel = tk.Label(
+        t = tk.Label(
             master = self.frame,
             text = 'Font', 
             highlightbackground = self.right_panel_color, 
         )
-        self.font_panel.place(x=10, y=60)
-        # self.register(self.font_panel)
+        t.place(x=10, y=60)
+        self.register(t)
 
-        self.font_type = tk.Button(
+        t = tk.Button(
             master = self.frame,
             text = 'Font type', 
             highlightbackground = self.right_panel_color, 
         )
-        self.font_type.place(x = 10, y=100)
-        # self.register(self.font_type)
+        t.place(x = 10, y=100)
+        self.register(t)
 
-        self.font_size = tk.Button(
+        t = tk.Button(
             master = self.frame,
             text = 'Font size',
             highlightbackground = self.right_panel_color, 
         )
-        self.font_size.place(x=110, y=100)
-        # self.register(self.font_size)
+        t.place(x=110, y=100)
+        self.register(t)
 
-        self.bold_text = tk.Button(
+        t = tk.Button(
             master = self.frame, 
             text = "B", 
             highlightbackground = self.right_panel_color,
         )
-        self.bold_text.place(x=10, y = 150)
+        t.place(x=10, y = 150)
+        self.register(t)
         # self.register(self.bold_text)
 
         self.italic_text = tk.Button(
@@ -69,7 +86,7 @@ class ToolPage(Page):
             highlightbackground = self.right_panel_color,
         )
         self.italic_text.place(x=60, y = 150)
-        # self.register(self.italic_text)
+        self.register(self.italic_text)
 
         self.underline_text = tk.Button(
             master = self.frame, 
@@ -77,7 +94,7 @@ class ToolPage(Page):
             highlightbackground = self.right_panel_color,
         )
         self.underline_text.place(x=110, y = 150)
-        # self.register(self.underline_text)
+        self.register(self.underline_text)
 
         self.text_color = tk.Button(
             master = self.frame,
@@ -85,7 +102,7 @@ class ToolPage(Page):
             highlightbackground = self.right_panel_color, 
         )
         self.text_color.place(x = 10, y=200)
-        # self.register(self.text_color)
+        self.register(self.text_color)
 
         self.highlight_text = tk.Button(
             master = self.frame,
@@ -93,7 +110,7 @@ class ToolPage(Page):
             highlightbackground = self.right_panel_color,
         )
         self.highlight_text.place(x=110, y = 200)
-        # self.register(self.highlight_text)
+        self.register(self.highlight_text)
 
         self.align_panel = tk.Label(
             master = self.frame,
@@ -101,7 +118,7 @@ class ToolPage(Page):
             highlightbackground = self.right_panel_color, 
         )
         self.align_panel.place(x=10, y=260)
-        # self.register(self.align_panel)
+        self.register(self.align_panel)
 
         self.align_to_left = tk.Button(
             master = self.frame, 
@@ -109,7 +126,7 @@ class ToolPage(Page):
             highlightbackground = self.right_panel_color,
         )
         self.align_to_left.place(x=10, y = 300)
-        # self.register(self.align_to_left)
+        self.register(self.align_to_left)
 
         self.align_to_right = tk.Button(
             master = self.frame, 
@@ -117,7 +134,7 @@ class ToolPage(Page):
             highlightbackground = self.right_panel_color,
         )
         self.align_to_right.place(x=150, y = 300)
-        # self.register(self.align_to_right)
+        self.register(self.align_to_right)
 
         self.align_to_center = tk.Button(
             master = self.frame, 
@@ -125,7 +142,7 @@ class ToolPage(Page):
             highlightbackground = self.right_panel_color,
         )
         self.align_to_center.place(x=10, y = 350)
-        # self.register(self.align_to_center)
+        self.register(self.align_to_center)
 
         self.justify_text = tk.Button(
             master = self.frame, 
@@ -133,7 +150,7 @@ class ToolPage(Page):
             highlightbackground = self.right_panel_color,
         )
         self.justify_text.place(x=175, y = 350)
-        # self.register(self.justify_text)
+        self.register(self.justify_text)
     
     def handleLeftMousePress(self, event):
         self.save_file()
