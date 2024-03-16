@@ -19,24 +19,23 @@ class StatusBar(Page):
         self.frame.place(x=0, y=700)
         self.register(self.frame)
     
-        wordCount = 0
+        wordCount = str(self.app.getPage("WriteArea").getWordCount())
         chracterCount = str(self.app.getPage("WriteArea").getCharacterCount())
         
         # label to show word count
         t = tk.Label(master=self.frame, text="word count: ")
-        t.place(x = 100, y = 1)
+        t.place(x = 10, y = 1)
         self.register(t)
         
         t = tk.Label(master=self.frame, text=wordCount)
-        t.place(x = 200, y = 1)
+        t.place(x = 110, y = 1)
         self.register(t)
         
         # label to show character count
         t = tk.Label(master=self.frame, text="character count: ")
-        t.place(x = 300, y = 1)
+        t.place(x = 210, y = 1)
         self.register(t)
         
         t = tk.Label(master=self.frame, text=chracterCount)
-        t.place(x = 400, y = 1)
+        t.place(x = 310, y = 1)
         self.register(t)
-    

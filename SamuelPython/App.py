@@ -18,14 +18,14 @@ class App:
         self.contentPage = None
         
         self.current_filename = ''
-        
+
     def handleKeyPress(self, event):
         self.statusBar.draw()
     
     def draw(self):
         # 只是创建了一个window
         self.window = tk.Tk()
-        self.window.geometry("1150x725")
+        self.window.geometry("1250x725")
         
         self.window.bind("<Key>", self.handleKeyPress)
 
@@ -39,7 +39,7 @@ class App:
         self.toolPage.draw()
         self.statusBar.draw()
         
-        self.contentPage.clear()
+        # self.contentPage.clear()
     
     def getPage(self, pageName):
         if pageName == 'WriteArea':
