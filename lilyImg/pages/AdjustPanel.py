@@ -9,6 +9,7 @@ from UIBase import Position, ButtonGroupValInt, Panel
 from tkinter.filedialog import askopenfilename, asksaveasfile, asksaveasfilename
 
 from Layer import Layer
+from PIL import Image
 
 
 class AdjustPanel(Panel):
@@ -64,9 +65,34 @@ class AdjustPanel(Panel):
 
         if self.app.current_file == "":
             return
+        
+        image = Image.open(self.app.current_file)
+
+        # adjust image size if it is too large
+        canvas_width = self.app.canvas.width
+        canvas_height = self.app.canvas.height
+        
+        image_width = image.width
+        image_height = image.height
+        
+        factor = 1
+        
+        # if image width > canvas width: 
+        factor1 = image_width / canvas_width
+        
+        # if image height > canvas height
+        factor2 = image_height / canvas_height
+        
+        
+        if factor1 > 1 or factor2 > 1:
+            # factor = factor1 if factor1 > factor2 else factor2
+            factor = max(factor1, factor2)
+            image = image.resize((image_width / factor, image_height / factor))
 
         l = Layer()
-        l.open(self.app.current_file)
+        l.image = image
+        l.path = self.app.current_file
+        
         l.name = "image" + str(len(self.app.layer))
 
         self.app.layer.append(l)
@@ -88,7 +114,12 @@ class AdjustPanel(Panel):
         self.app.update_render()
 
     def adjust_saturation(self):
-        return
+        val = int(self.saturation.entry.get())
+
+        l = self.app.layer[self.app.current_layer_index]
+
+        l.saturation = val
+        self.app.update_render()
 
     def adjust_vibrance(self):
         val = int(self.vibrance.entry.get())

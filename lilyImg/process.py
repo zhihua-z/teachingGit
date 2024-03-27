@@ -50,11 +50,11 @@ def adjust_saturation(img, saturation):
         for x in range(t_img.width):
             p = t_img.getpixel((x, y))
             
-            # calculate mean value of r g b
-            if saturation < 0 :
-                ....
-            else:
-                ....
+            # # calculate mean value of r g b
+            # if saturation < 0 :
+            #     ....
+            # else:
+            #     ....
             
             t_img.putpixel((x, y), p)
 

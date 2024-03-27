@@ -6,7 +6,6 @@ Layer :
 """
 
 
-from PIL import Image
 import process
 
 
@@ -21,11 +20,8 @@ class Layer:
         self.crop_B_point = None
 
         self.brightness = 0
+        self.saturation = 50
         self.vibrance = 50
-
-    def open(self, filePath):
-        self.path = filePath
-        self.image = Image.open(filePath)
 
     def render(self):
 
@@ -36,7 +32,7 @@ class Layer:
         t_image = process.adjust_vibrance(t_image, self.vibrance)
 
         # apply contrast
-        # t_image = process.adjust_saturation(t_image, self.saturation)
+        t_image = process.adjust_saturation(t_image, self.saturation)
 
         # apply saturation
         
