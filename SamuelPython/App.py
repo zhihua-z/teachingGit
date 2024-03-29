@@ -5,6 +5,8 @@ from Pages.WriteArea import WriteArea
 from Pages.ContentPage import ContentPage
 from Pages.StatusBar import StatusBar
 
+from Book import Book, Chapter
+
 class App:
     
     def __init__(self):
@@ -18,6 +20,9 @@ class App:
         self.contentPage = None
         
         self.current_filename = ''
+        
+        self.book = Book('新书')
+        self.currentChapter = None
 
     def handleKeyPress(self, event):
         self.statusBar.draw()
@@ -38,6 +43,13 @@ class App:
         self.writeArea.draw()
         self.toolPage.draw()
         self.statusBar.draw()
+        
+    def refresh(self):
+        self.contentPage.draw()
+        self.writeArea.draw()
+        self.toolPage.draw()
+        self.statusBar.draw()
+        
     
     def getPage(self, pageName):
         if pageName == 'WriteArea':

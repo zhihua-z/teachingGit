@@ -1,6 +1,7 @@
 import tkinter as tk
 
 from Page import Page
+from Book import Chapter
 
 class ContentPage(Page):
     
@@ -16,3 +17,19 @@ class ContentPage(Page):
         self.frame.place(x=0, y=0)
         self.register(self.frame)
         
+        count = 0
+        for c in self.app.book.chapters:
+            self.newFile = tk.Button(master=self.frame, text=c.name, command= lambda chapter = c: self.changeChapter(chapter))
+            self.newFile.place(x=5, y=5 + count * 40)
+            
+            count += 1
+        
+    def addChapter(self, chapterName = '', content = '', filePath = ''):
+        c = Chapter(chapterName, content, filePath)
+        self.app.book.addChapter(c)
+        
+        self.app.refresh()
+        
+    def changeChapter(self, chapter):
+        self.app.currentChapter = chapter
+        self.app.refresh()

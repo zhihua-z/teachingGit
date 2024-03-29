@@ -28,3 +28,4 @@ class Page:
             UIcomp.destroy()
         
         self.components.clear()
+        self.UIcomponents.clear()
