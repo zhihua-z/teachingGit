@@ -11,11 +11,10 @@ class StatusBar(Page):
         
         self.frame = None
         
-    
     def draw(self):
         self.clear()
         
-        self.frame = tk.Frame(width=1150, height=25)
+        self.frame = tk.Frame(width=1250, height=25)
         self.frame.place(x=0, y=700)
         self.register(self.frame)
     

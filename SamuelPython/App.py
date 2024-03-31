@@ -5,7 +5,8 @@ from Pages.WriteArea import WriteArea
 from Pages.ContentPage import ContentPage
 from Pages.StatusBar import StatusBar
 
-from Book import Book, Chapter
+from Book import Book
+from Book import Chapter
 
 class App:
     
@@ -26,6 +27,10 @@ class App:
 
     def handleKeyPress(self, event):
         self.statusBar.draw()
+
+    def handleKeyAutoSave(self, event):
+        if event.state == 4 and event.keysym.lower() == "s":
+            self.toolPage.save_file()
     
     def draw(self):
         # 只是创建了一个window
@@ -33,6 +38,7 @@ class App:
         self.window.geometry("1250x725")
         
         self.window.bind("<Key>", self.handleKeyPress)
+        self.window.bind("<Control-s>", self.handleKeyAutoSave)
 
         self.contentPage = ContentPage(self)
         self.writeArea = WriteArea(self)
@@ -62,6 +68,7 @@ class App:
             return self.toolPage
         
         return None
+    
 
     def run(self):
         # 这个mainloop会不停的监听任何事件的发生，然后重画这个window

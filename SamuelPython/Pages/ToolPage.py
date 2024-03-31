@@ -26,7 +26,7 @@ class ToolPage(Page):
             size=(25, 25), 
             position=(10, 10), 
             command=self.open_file,
-            text='open file'
+            text='Open file'
         )
         self.registerUI(t)
 
@@ -36,7 +36,7 @@ class ToolPage(Page):
             size = (25, 25),
             position = (110, 10),
             command = self.save_file,
-            text = 'save file'
+            text = 'Save file'
         )
         self.registerUI(t)
         
@@ -46,7 +46,7 @@ class ToolPage(Page):
             size = (25, 25),
             position = (210, 10),
             command = self.new_file,
-            text = 'new file'
+            text = 'New file'
         )
         self.registerUI(t)
 
@@ -128,60 +128,72 @@ class ToolPage(Page):
         t.place(x=10, y=315)
         self.register(t)
 
-        t = tk.Button(
+        t = ImageButton(
             master = self.frame, 
-            text = "Align text to left", 
-            highlightbackground = self.right_panel_color,
+            filename = 'align_left.png',
+            size = (25, 25),
+            position = (10, 360),
+            command = None,
+            text='Align text to left'
         )
-        t.place(x=10, y = 350)
-        self.register(t)
+        self.registerUI(t) 
 
-        t = tk.Button(
+        t = ImageButton(
             master = self.frame, 
-            text = "Align text to right", 
-            highlightbackground = self.right_panel_color,
+            filename = 'align_right.png',
+            size = (25, 25),
+            position = (160, 360),
+            command = None,
+            text='Align text to right'
         )
-        t.place(x=150, y = 350)
-        self.register(t)
+        self.registerUI(t) 
 
-        t = tk.Button(
+        t = ImageButton(
             master = self.frame, 
-            text = "Align text to center", 
-            highlightbackground = self.right_panel_color,
+            filename = 'align_center.png',
+            size = (25, 25),
+            position = (10, 440),
+            command = None,
+            text='Align text to center'
         )
-        t.place(x=10, y = 390)
-        self.register(t)
+        self.registerUI(t) 
 
-        t = tk.Button(
+        t = ImageButton(
             master = self.frame, 
-            text = "Justify text", 
-            highlightbackground = self.right_panel_color,
+            filename = 'justify.png',
+            size = (25, 25),
+            position = (160, 440),
+            command = None, 
+            text='Justify text'
         )
-        t.place(x=175, y = 390)
-        self.register(t)
-    
-    def handleLeftMousePress(self, event):
-        self.save_file()
+        self.registerUI(t) 
 
     def open_file(self):
         self.app.current_filename = askopenfilename()
-
         f = open(self.app.current_filename, "r")
         text = f.read()
 
         if self.app.current_filename:
 
             self.app.contentPage.addChapter(content = text, filePath = self.app.current_filename)
+            # To get the last page as the current page 
+            self.app.currentChapter = self.app.book.chapters[-1]
+            self.app.writeArea.draw()
+            self.app.refresh()
 
 
     def save_file(self):
-        self.app.current_filename = asksaveasfilename(
-            defaultextension=".txt",
-            filetypes=[("Text Files", "*.txt"), ("All Files", "*.*")],
-        )
 
-        if not self.app.current_filename:
-            return
+        if self.app.currentChapter.filePath:
+            self.app.current_filename = self.app.currentChapter.filePath
+        else:
+            self.app.current_filename = asksaveasfilename(
+                defaultextension=".txt",
+                filetypes=[("Text Files", "*.txt"), ("All Files", "*.*")],
+            )
+
+            if not self.app.current_filename:
+                return
 
         with open(self.app.current_filename, mode="w", encoding="utf-8") as output_file:
             
@@ -190,9 +202,12 @@ class ToolPage(Page):
             if writePage:
                 text = writePage.get_content()
                 output_file.write(text)
-    
+
     def new_file(self):
         # 1. 在左边开一个新章节
         # 2. 如果内容被修改，在章节名字后面加一个*
         # 3. 如果没保存就退出，提示是否不保存就离开
         self.app.contentPage.addChapter()
+        self.app.currentChapter = self.app.book.chapters[-1]
+        self.app.writeArea.draw()
+        self.app.refresh()

@@ -50,4 +50,4 @@ class ImageButton:
         self.image = None
         self.photoImage = None
         self.component = None
-        self.Label = None
+        self.label = None
