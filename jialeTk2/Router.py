@@ -51,12 +51,14 @@ class Router(InternetDevice):
       print(x, self.cache_router[x])
 
     print('')
+  
 
   # 成功连接，返回True
   # 失败返回False
   def connect(self, device):
     # 当可用ip不足的时候，拒绝连接
     if self.connect_count == len(self.ip_list):
+      print(f'无法获取IP')
       return None, None
 
     self.connect_count += 1
@@ -116,6 +118,7 @@ class Router(InternetDevice):
       pass
     else:
       # 挑选一个随机连接着的路由器发过去
+      print(f'找不到路由器')
       for x in self.cache_router:
         # 如果这个缓存的ip是这个包的来源，不发
         if x == packet.before_ip:

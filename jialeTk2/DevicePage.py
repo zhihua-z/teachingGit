@@ -23,6 +23,8 @@ class DevicePage(Page):
         
         self.device_list.append(d1)
         self.device_list.append(d2)
+        self.device_list.append(d4)
+        self.device_list.append(d5)
 
         
 
