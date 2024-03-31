@@ -1,8 +1,9 @@
 class Panel:
-  def __init__(self, app, size):
+  def __init__(self, app, size, styles):
     self.app = app
     self.comp_list = []
     self.size = size
+    self.styles = styles
     
   def setup(self):
     pass

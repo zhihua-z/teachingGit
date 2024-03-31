@@ -10,8 +10,8 @@ from CYMath import Vector2
 
 
 class LayerPanel(Panel):
-  def __init__(self, app, size: Vector2):
-    super().__init__(app, size)
+  def __init__(self, app, size: Vector2, styles):
+    super().__init__(app, size, styles)
   
   def setup(self, pos_x, pos_y):
     self.clear()

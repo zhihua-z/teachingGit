@@ -8,8 +8,11 @@ from Pages.CropPanel import CropPanel
 from Pages.EffectPanel import EffectPanel
 from Pages.MenuPanel import MenuPanel
 from Pages.LayerPanel import LayerPanel
+from Pages.ToolsPanel import ToolsPanel
 
 from Layer import Layer
+
+from styles import Styles
 
 class Application:
     def __init__(self):
@@ -28,16 +31,19 @@ class Application:
         self.B_pos = None
         
         self.click_pos = None
+        self.styles = Styles()
         
         self.control_down = False
         self.viewport_width = 0
         self.viewport_height = 0
-        self.adjust_panel = AdjustPanel(self, Vector2(400, 600))
-        self.effect_panel = EffectPanel(self, Vector2(400, 600))
-        self.crop_panel = CropPanel(self, Vector2(400, 600))
-        self.menu_panel = MenuPanel(self, Vector2(100, 600))
-        self.layer_panel = LayerPanel(self, Vector2(1300, 120))
+        self.adjust_panel = AdjustPanel(self, Vector2(400, 600), self.styles)
+        self.effect_panel = EffectPanel(self, Vector2(400, 600), self.styles)
+        self.crop_panel = CropPanel(self, Vector2(400, 600), self.styles)
+        self.menu_panel = MenuPanel(self, Vector2(100, 600), self.styles)
+        self.layer_panel = LayerPanel(self, Vector2(1300, 120), self.styles)
+        self.toolsPanel = ToolsPanel(self, Vector2(1300, 50), self.styles)
         self.vp_list = []
+        
 
     def register(self, frame, tkComp):
         if frame == self.viewport:
@@ -45,11 +51,12 @@ class Application:
 
     def setup(self):
         self.window = tk.Tk()
-        self.window.geometry('1300x720')
+        self.window.geometry('1300x770')
+        
 
-        self.menu_panel.setup(0, 0)
+        self.menu_panel.setup(0, 50)
         self.viewport = tk.Frame(width=800, height=600)
-        self.viewport.place(x=100, y=0)
+        self.viewport.place(x=100, y=50)
         self.viewport_width = 800
         self.viewport_height = 600
 
@@ -57,8 +64,9 @@ class Application:
         self.window.bind('<KeyPress>', self.key_press)
         self.window.bind('<KeyRelease>', self.key_released)
 
-        self.adjust_panel.setup(900, 0)
-        self.layer_panel.setup(0, 600)
+        self.toolsPanel.setup(0, 0)
+        self.adjust_panel.setup(900, 50)
+        self.layer_panel.setup(0, 650)
 
     def switch(self, panel_name):
         self.adjust_panel.clear()
@@ -66,11 +74,11 @@ class Application:
         self.crop_panel.clear()
 
         if panel_name == 'adjust_panel':
-            self.adjust_panel.setup(900, 0)
+            self.adjust_panel.setup(900, 50)
         elif panel_name == 'effect_panel':
-            self.effect_panel.setup(900, 0)
+            self.effect_panel.setup(900, 50)
         elif panel_name == 'crop_panel':
-            self.crop_panel.setup(900, 0)
+            self.crop_panel.setup(900, 50)
 
     def key_press(self, event):
         print(event)

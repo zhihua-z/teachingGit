@@ -1,6 +1,5 @@
 import tkinter as tk
-from PIL import Image
-from PIL import ImageTk
+from PIL import Image, ImageTk
 from tkinter.filedialog import askopenfilename
 import process
 
@@ -11,8 +10,8 @@ from Layer import Layer
 from Mystring import find_last_of
 
 class AdjustPanel(Panel):
-  def __init__(self, app, size: Vector2):
-    super().__init__(app, size)
+  def __init__(self, app, size: Vector2, styles):
+    super().__init__(app, size, styles)
   
   def setup(self, pos_x, pos_y):
     super().setup()
@@ -29,7 +28,6 @@ class AdjustPanel(Panel):
     self.btn_open = tk.Button(master = self.master, text='open', command=self.ask_open_file)
     self.btn_open.place(x=10, y=10)
     self.register(self.btn_open)
-    
     
     t = tk.Button(master = self.master, text='import', command=self.ask_open_file_import)
     t.place(x=90, y=10)

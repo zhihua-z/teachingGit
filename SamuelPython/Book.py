@@ -13,5 +13,7 @@ class Book:
 class Chapter:
     def __init__(self, chapName = '', content = '', filePath = ''):
         self.name = chapName
+        self.prevContent = content
         self.content = content
         self.filePath = filePath
+        self.status = 'Ok'

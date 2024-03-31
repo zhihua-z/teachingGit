@@ -7,10 +7,12 @@ import process
 from Panel import Panel
 from CYMath import Vector2
 
+from UI.CYUI import CYLabel, CYButton
+
 
 class EffectPanel(Panel):
-  def __init__(self, app, size: Vector2):
-    super().__init__(app, size)
+  def __init__(self, app, size: Vector2, styles):
+    super().__init__(app, size, styles)
     
     # below is your own button panel stuffs
     pass
@@ -18,12 +20,17 @@ class EffectPanel(Panel):
   def setup(self, pos_x, pos_y):
     super().setup()
     
-    self.master = tk.Frame(width=self.size.x, height=self.size.y)
+    self.master = tk.Frame(width=self.size.x, 
+                           height=self.size.y,
+                           background=self.styles.app_background,
+                           highlightbackground=self.styles.app_background)
     self.master.place(x = pos_x, y = pos_y)
     self.register(self.master)
     
-    t = tk.Label(master=self.master, text='this is effect panel')
-    t.place(x = 0, y = 350)
+    t = CYLabel(master=self.master, 
+                 text='this is effect panel',
+                 styles=self.styles,
+                 position=(5, 350))
     self.register(t)
     
     self.btn_open = tk.Button(master = self.master, text='open', command=self.ask_open_file)
@@ -43,18 +50,27 @@ class EffectPanel(Panel):
     self.btn_extract_red = tk.Button(master=self.master, text='extract red', command=self.on_extract_red_press)
     self.btn_extract_red.place(x = 10, y = 110)
     self.register(self.btn_extract_red)
+    
+    t = CYButton(master=self.master, 
+                 text='extract red', 
+                 command=self.on_extract_red_press,
+                 styles=self.styles,
+                 position=(10, 140))
+    self.register(t)
 
-    self.btn_extract_green = tk.Button(master=self.master, text='extract green', command=self.on_extract_green_press)
-    self.btn_extract_green.place(x = 10, y = 140)
-    self.register(self.btn_extract_green)
+    t = CYButton(master=self.master, 
+                 text='extract green', 
+                 command=self.on_extract_green_press,
+                 styles=self.styles,
+                 position=(10, 170))
+    self.register(t)
 
-    self.btn_extract_blue = tk.Button(master=self.master, text='extract blue', command=self.on_extract_blue_press)
-    self.btn_extract_blue.place(x = 10, y = 170)
-    self.register(self.btn_extract_blue)
-
-    self.btn_extract_original = tk.Button(master=self.master, text='original', command=self.on_extract_original_press)
-    self.btn_extract_original.place(x = 10, y = 200)
-    self.register(self.btn_extract_original)
+    t = CYButton(master=self.master, 
+                 text='extract blue', 
+                 command=self.on_extract_blue_press,
+                 styles=self.styles,
+                 position=(10, 200))
+    self.register(t)
 
     self.btn_crop_A = tk.Button(master=self.master, text = 'Crop A', command=self.on_crop_A_pressed)
     self.btn_crop_A.place(x = 10, y = 230)

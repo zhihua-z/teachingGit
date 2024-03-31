@@ -19,7 +19,11 @@ class ContentPage(Page):
         
         count = 0
         for c in self.app.book.chapters:
-            self.newFile = tk.Button(master=self.frame, text=c.name, command= lambda chapter = c: self.changeChapter(chapter))
+            tname = c.name
+            
+            if c.status == 'Changed':
+                tname = c.name + '*'
+            self.newFile = tk.Button(master=self.frame, text=tname, command= lambda chapter = c: self.changeChapter(chapter))
             self.newFile.place(x=5, y=5 + count * 40)
             
             count += 1
