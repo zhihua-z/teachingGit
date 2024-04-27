@@ -26,26 +26,26 @@ class ImageButton:
         # convert this image into PhotoImage for it to be used in TK
         self.photoImage = ImageTk.PhotoImage(self.image)
         
-        self.component = tk.Button( master = master, 
-                                    image =self.photoImage, 
-                                    width = size[0], 
-                                    height = size[1], 
-                                    command =command, 
-                                    text = text, 
-                                    background=Styles.backgroundColor,
-                                    highlightbackground=Styles.backgroundColor,
-                                    foreground=Styles.foregroundColor
+        self.component = tk.Button(master = master, 
+                                   image =self.photoImage, 
+                                   width = size[0], 
+                                   height = size[1], 
+                                   command = command, 
+                                   text = text, 
+                                   background = Styles.backgroundColor,
+                                   highlightbackground = Styles.backgroundColor,
+                                   foreground = Styles.foregroundColor
                                    )
         
         self.component.image = self.photoImage
-        self.component.place(x=position[0], y=position[1])
+        self.component.place(x = position[0], y = position[1])
 
         self.label = tk.Label(
             master = master, 
             text = text, 
-            background=Styles.backgroundColor,
-            highlightbackground=Styles.backgroundColor,
-            foreground=Styles.foregroundColor
+            background = Styles.backgroundColor,
+            highlightbackground = Styles.backgroundColor,
+            foreground = Styles.foregroundColor
         )
         self.label.place(x = position[0], y = position[1] + 35)
         
@@ -61,23 +61,41 @@ class ImageButton:
         self.label = None
 
 class Label:
-    
     # input: file location, (size: tuple), (position: tuple)
-    def __init__(self, master, position, text):
+    def __init__(self, master, text, position):
         self.position = position
         self.text = text 
-    
         self.label = None
         
         self.label = tk.Label(
             master = master, 
             text = text, 
-            background=Styles.backgroundColor,
-            highlightbackground=Styles.backgroundColor,
-            foreground=Styles.foregroundColor
+            background = Styles.backgroundColor,
+            highlightbackground = Styles.backgroundColor,
+            foreground = Styles.foregroundColor
         )
         self.label.place(x = position[0], y = position[1])
         
     def destroy(self):
         self.label.destroy()
         self.label = None
+
+class Button:
+    def __init__(self, master, text, position, command = None):
+        self.position = position
+        self.text = text 
+        self.button = None
+        
+        self.button = tk.Button(
+            master = master, 
+            text = text, 
+            background = Styles.backgroundColor,
+            highlightbackground = Styles.backgroundColor,
+            foreground = Styles.foregroundColor,
+            command=command
+        )
+        self.button.place(x = position[0], y = position[1])
+        
+    def destroy(self):
+        self.button.destroy()
+        self.button = None

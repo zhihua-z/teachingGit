@@ -5,8 +5,6 @@ from Page import Page
 class StatusBar(Page):
     
     def __init__(self, app):
-        # 如果你的class继承了另一个class
-        # 在构建自己之前，需要先构建那个继承的class
         super().__init__(app)
         
         self.frame = None
@@ -14,8 +12,8 @@ class StatusBar(Page):
     def draw(self):
         self.clear()
         
-        self.frame = tk.Frame(width=1250, height=25)
-        self.frame.place(x=0, y=700)
+        self.frame = tk.Frame(width = 1250, height = 25)
+        self.frame.place(x = 0, y = 700)
         self.register(self.frame)
     
         wordCount = str(self.app.getPage("WriteArea").getWordCount())

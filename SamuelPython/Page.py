@@ -23,7 +23,7 @@ class Page:
     def clear(self):
         for comp in self.components:
             comp.destroy()
-            
+        
         for UIcomp in self.UIcomponents:
             UIcomp.destroy()
         

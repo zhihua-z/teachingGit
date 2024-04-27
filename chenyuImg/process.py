@@ -177,6 +177,9 @@ def crop_image(img, Apos, Bpos):
     # 2. 然这一条白色像素点结束的时候，记下当前 x2
     # 3. width = x2 - x1 + 1
     
+    if Apos is None or Bpos is None:
+        return
+    
     img_t = Image.new(mode = 'RGB', size = (Bpos[0] - Apos[0] + 1, Bpos[1] - Apos[1] + 1), color=(255, 255, 255))
     start_x = Apos[0]
     start_y = Apos[1]

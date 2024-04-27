@@ -5,33 +5,50 @@ import process
 from Panel import Panel
 from CYMath import Vector2
 
+from CYUI import CYLabel, CYButton
+import styles
+
 class CropPanel(Panel):
-    def __init__(self, app, size: Vector2, styles):
-        super().__init__(app, size, styles)
+    def __init__(self, app, size: Vector2):
+        super().__init__(app, size)
 
     def setup(self, pos_x, pos_y):
         super().setup()
-
-        self.master = tk.Frame(width=self.size.x, height=self.size.y)
+        self.master = tk.Frame(width=self.size.x, 
+                           height=self.size.y, 
+                           background=styles.app_background, 
+                           highlightbackground=styles.app_background)
         self.master.place(x = pos_x, y = pos_y)
         self.register(self.master)
 
-        t = tk.Label(master=self.master, text='this is crop panel')
-        t.place(x=0, y=350)
+        t = CYLabel(master=self.master, 
+                 text='this is crop panel',
+                 position=(5, 350))
         self.register(t)
 
-        self.btn_crop_A = tk.Button(master=self.master, text='Crop A', command=self.on_crop_A_pressed)
-        self.btn_crop_A.place(x=10, y=230)
-        self.btn_crop_B = tk.Button(master=self.master, text='Crop B', command=self.on_crop_B_pressed)
-        self.btn_crop_B.place(x=70, y=230)
-        self.btn_export = tk.Button(master=self.master, text='Export', command=self.on_export_pressed)
-        self.btn_export.place(x=130, y=230)
-        self.btn_cancelcrop = tk.Button(master=self.master, text='cancelcrop', command=self.on_cancelcrop_pressed)
-        self.btn_cancelcrop.place(x=190, y=230)
-        self.register(self.btn_crop_A)
-        self.register(self.btn_crop_B)
-        self.register(self.btn_cancelcrop)
-        self.register(self.btn_export)
+        t = CYButton(master=self.master, 
+                 text='Crop_A', 
+                 command=self.on_crop_A_pressed,
+                 position=(10, 230))
+        self.register(t)
+
+        t = CYButton(master=self.master, 
+                 text='Crop_B', 
+                 command=self.on_crop_B_pressed,
+                 position=(70, 230))
+        self.register(t)
+
+        t = CYButton(master=self.master, 
+                 text='Export', 
+                 command=self.on_export_pressed,
+                 position=(10, 270))
+        self.register(t)
+
+        t = CYButton(master=self.master, 
+                 text='CancelCrop', 
+                 command=self.on_cancelcrop_pressed,
+                 position=(10, 310))
+        self.register(t)
 
     def on_crop_A_pressed(self):
         self.app.on_selecting_A = True

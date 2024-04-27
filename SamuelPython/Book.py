@@ -17,3 +17,24 @@ class Chapter:
         self.content = content
         self.filePath = filePath
         self.status = 'Ok'
+        
+class DBBook:
+    def __init__(self, id, name, userid, created_time):
+        self.id = id
+        self.name = name
+        self.userid = userid
+        self.created_time = created_time
+        
+        self.chapters = []
+        
+class DBChapter:
+    def __init__(self, id, title, content, bookid, created_time):
+        self.id = id
+        self.title = title
+        self.prevContent = content
+        self.content = content
+        self.bookid = bookid
+        self.creatd_time = created_time
+        
+        self.status = 'Ok'
+        

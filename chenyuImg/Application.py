@@ -1,6 +1,5 @@
 import tkinter as tk
 from PIL import Image, ImageTk
-from tkinter.filedialog import askopenfilename, asksaveasfilename
 import process
 from CYMath import Vector2
 from Pages.AdjustPanel import AdjustPanel
@@ -9,19 +8,30 @@ from Pages.EffectPanel import EffectPanel
 from Pages.MenuPanel import MenuPanel
 from Pages.LayerPanel import LayerPanel
 from Pages.ToolsPanel import ToolsPanel
+from Pages.LoginPage import LoginPage
+from Pages.RegisterPage import RegisterPage
+from Pages.Welcomepage import WelcomePage
 
 from Layer import Layer
 
-from styles import Styles
+from DBtool import Database
 
 class Application:
     def __init__(self):
+        self.db = Database()
+        
         self.filename = ''
         self.original_image = None
         self.current_image = None
         self.layer = []
         self.current_layer_index = None
         self.lblImage = None
+        self.current_project_id = 0
+        
+        self.authenticated = False
+        self.welgo = True
+        self.go_to_register_page = False
+        self.username = None
         
         self.crop_A_layer = None
         self.crop_B_layer = None
@@ -31,17 +41,19 @@ class Application:
         self.B_pos = None
         
         self.click_pos = None
-        self.styles = Styles()
         
         self.control_down = False
         self.viewport_width = 0
         self.viewport_height = 0
-        self.adjust_panel = AdjustPanel(self, Vector2(400, 600), self.styles)
-        self.effect_panel = EffectPanel(self, Vector2(400, 600), self.styles)
-        self.crop_panel = CropPanel(self, Vector2(400, 600), self.styles)
-        self.menu_panel = MenuPanel(self, Vector2(100, 600), self.styles)
-        self.layer_panel = LayerPanel(self, Vector2(1300, 120), self.styles)
-        self.toolsPanel = ToolsPanel(self, Vector2(1300, 50), self.styles)
+        self.adjust_panel = AdjustPanel(self, Vector2(400, 600))
+        self.effect_panel = EffectPanel(self, Vector2(400, 600))
+        self.crop_panel = CropPanel(self, Vector2(400, 600))
+        self.menu_panel = MenuPanel(self, Vector2(100, 600))
+        self.layer_panel = LayerPanel(self, Vector2(1300, 120))
+        self.toolsPanel = ToolsPanel(self, Vector2(1300, 50))
+        self.loginPage = LoginPage(self, Vector2(1300, 770))
+        self.registerPage = RegisterPage(self, Vector2(1300,770))
+        self.welcomePage = WelcomePage(self, Vector2(1300,770))
         self.vp_list = []
         
 
@@ -53,7 +65,23 @@ class Application:
         self.window = tk.Tk()
         self.window.geometry('1300x770')
         
-
+        self.setup_pages()
+        
+    def draw_login(self):
+        self.loginPage.setup(0, 0)
+    
+    def draw_register(self):
+        if self.loginPage is not None:
+                self.loginPage.clear()
+        self.registerPage.setup(0, 0)
+    
+    def draw_welcome(self):
+        self.welcomePage.setup(0, 0)
+    
+    def draw_mainApp(self):
+        if self.welcomePage is not None:
+            self.welcomePage.clear()
+        
         self.menu_panel.setup(0, 50)
         self.viewport = tk.Frame(width=800, height=600)
         self.viewport.place(x=100, y=50)
@@ -67,6 +95,20 @@ class Application:
         self.toolsPanel.setup(0, 0)
         self.adjust_panel.setup(900, 50)
         self.layer_panel.setup(0, 650)
+
+    def setup_pages(self):
+        if self.authenticated: # 登录了
+            if self.welgo:
+                self.draw_welcome()
+            else:
+                self.draw_mainApp()
+        else: # 没登录
+            if self.go_to_register_page:
+                self.draw_register()
+            else:
+                self.draw_login()
+        
+
 
     def switch(self, panel_name):
         self.adjust_panel.clear()
@@ -127,6 +169,9 @@ class Application:
             component.destroy()
 
     def render_image(self, image):
+        if image is None:
+            return
+        
         self.destroy_if_have(self.lblImage)
         image1 = ImageTk.PhotoImage(image)
         self.lblImage = tk.Label(master=self.viewport, image=image1)
@@ -153,6 +198,8 @@ class Application:
         self.click_pos = (event.x, event.y)
         
         if self.on_selecting_A:
+            if self.current_layer_index is None:
+                return
             self.on_selecting_A = False
             img_pos = self.screen_position_to_image_position((event.x, event.y))
             current_layer = self.layer[self.current_layer_index]
@@ -163,6 +210,8 @@ class Application:
             self.A_pos = img_pos
             
         elif self.on_selecting_B:
+            if self.current_layer_index is None:
+                return
             self.on_selecting_B = False
             img_pos = self.screen_position_to_image_position((event.x, event.y))
             current_layer = self.layer[self.current_layer_index]

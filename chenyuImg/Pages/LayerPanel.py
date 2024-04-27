@@ -6,19 +6,18 @@ import process
 
 from Panel import Panel
 from CYMath import Vector2
-
-
+import styles
 
 class LayerPanel(Panel):
-  def __init__(self, app, size: Vector2, styles):
-    super().__init__(app, size, styles)
+  def __init__(self, app, size: Vector2):
+    super().__init__(app, size)
   
   def setup(self, pos_x, pos_y):
     self.clear()
     super().setup()
     
     
-    self.master = tk.Frame(width=self.size.x, height=self.size.y)
+    self.master = tk.Frame(width=self.size.x, height=self.size.y, background=styles.app_background)
     self.master.place(x = pos_x, y = pos_y)
     self.register(self.master)
     
