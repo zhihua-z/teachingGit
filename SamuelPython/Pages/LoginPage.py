@@ -1,6 +1,7 @@
 import tkinter as tk
 
 from Page import Page
+from UI.ImageButton import ImageButton, Button, Label
 
 import Styles
 
@@ -14,6 +15,7 @@ class LoginPage(Page):
         self.message = None
 
         self.titleFont = ('Sans-Serif' , 60 , 'bold')
+        self.textFont = ('Times New Roman', 18)
         
     def draw(self):
         self.clear()
@@ -24,40 +26,44 @@ class LoginPage(Page):
         self.frame.place(x = 0, y = 0)
         self.register(self.frame)
 
-        self.title = tk.Label(master = self.frame,
-                               text = "Online  Text  Editor",
-                               font = self.titleFont, 
-                               highlightbackground=Styles.backgroundColor, 
-                               )
-        self.title.place(x = 350, y = 200)
+        self.title = Label(
+            master = self.frame, 
+            text = "Online Text Editor", 
+            font = self.titleFont, 
+            position = ((375, 250))
+        )
 
-        self.usernameText = tk.Label(master = self.frame,
-                                     text = "Username: ",
-                                     highlightbackground = Styles.backgroundColor)
-        self.usernameText.place(x = 450, y = 400)
+        self.usernameText = Label(
+            master = self.frame, 
+            text = "Username: ", 
+            font = self.textFont, 
+            position = ((450, 400))
+        )
 
         self.username = tk.Entry(master=self.frame)
         self.username.place(x = 550, y = 400)
-        
-        self.passwordText = tk.Label(master = self.frame,
-                                     text = "Password: ",
-                                     highlightbackground = Styles.backgroundColor)
-        self.passwordText.place(x = 450, y = 450)
+
+        self.passwordText = Label(
+            master = self.frame, 
+            text = "Password: ", 
+            font = self.textFont, 
+            position = ((455, 450))
+        )
 
         self.password = tk.Entry(master=self.frame, show="*")
         self.password.place(x = 550, y = 450)
         
         t = tk.Button(master=self.frame,
-                      text="register",
+                      text="Register",
                       command=self.registerUser,
                       highlightbackground=Styles.backgroundColor)
         t.place(x = 550, y = 500)
         
         t = tk.Button(master=self.frame,
-                      text="login",
+                      text="Login",
                       command=self.login,
                       highlightbackground=Styles.backgroundColor)
-        t.place(x = 650, y = 500)
+        t.place(x = 655, y = 500)
 
     def registerUser(self):
         
@@ -65,11 +71,7 @@ class LoginPage(Page):
         password = self.password.get()
         
         # ensure no such user exist
-        querystr1 = '''
-        select id from user
-        where name = ?
-        '''
-        result = self.app.cursor.execute(querystr1, (username,)).fetchall()
+        result = self.app.db.retrieveUserByUsername(self.username)
         
         if len(result) != 0:
             if self.message is not None:
@@ -83,12 +85,7 @@ class LoginPage(Page):
             return
         
         # insert into db
-        querystr = '''
-        insert into user (name, password)
-        values (?, ?)
-        '''
-        self.app.cursor.execute(querystr, (username, password))
-        self.app.connection.commit()
+        self.app.db.saveUser(username, password)
     
         # return successful registration
         if self.message is not None:
@@ -105,11 +102,7 @@ class LoginPage(Page):
         password = self.password.get()
         
         # find such user record
-        querystr1 = '''
-        select id from user
-        where name = ?
-        '''
-        result = self.app.cursor.execute(querystr1, (username,)).fetchall()
+        result = self.app.db.retrieveUserByUsername(username)
         
         if len(result) == 0:
             if self.message is not None:
@@ -123,11 +116,7 @@ class LoginPage(Page):
             return
         
         # verify password
-        querystr2 = '''
-        select id from user
-        where name = ? and password = ?
-        '''
-        result = self.app.cursor.execute(querystr2, (username, password)).fetchall()
+        result = self.app.db.verifyPassword(username, password)
         
         if len(result) == 0:
             if self.message is not None:

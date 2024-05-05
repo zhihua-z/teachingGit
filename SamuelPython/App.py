@@ -6,9 +6,9 @@ from Pages.ContentPage import ContentPage
 from Pages.StatusBar import StatusBar
 from Pages.LoginPage import LoginPage
 from Pages.WelcomePage import WelcomePage
-from Book import Book, Chapter
-
-import sqlite3
+from Pages.RIghtMenu import RightMenu
+from Book import Book, Chapter, DBBook, DBChapter 
+from DBconnection import DBconnection
 
 class App:
     
@@ -18,8 +18,7 @@ class App:
         self.f1 = None
         self.f2 = None
 
-        self.connection = sqlite3.connect('mydb.db')
-        self.cursor = self.connection.cursor()
+        self.db = DBconnection('mydb.db')
         
         self.toolPage = None
         self.writeArea = None
@@ -53,6 +52,8 @@ class App:
         self.statusBar = StatusBar(self)
         self.loginPage = LoginPage(self)
         self.welcomePage = WelcomePage(self)
+        self.rightMenu = RightMenu(self)
+        
 
     def handleKeyPress(self, event):
         if self.loggedin == False:
@@ -76,15 +77,18 @@ class App:
         if self.username is not None:
             self.window.title('Editor: ' + self.username)
         else:
-            self.window.title('Editor')
+            self.window.title('Online Text Editor')
         
         self.window.bind("<Key>", self.handleKeyPress)
         self.window.bind("<Control-s>", self.handleKeyAutoSave)
         self.window.bind("<KeyRelease>", self.inputChanged)
         
         self.drawMainPage()
+
         
     def drawMainPage(self):
+        self.rightMenu.draw()
+        
         if self.loggedin:
             if self.openedBook:
                 self.contentPage.draw()
@@ -131,24 +135,12 @@ class App:
     def retrieveUserBooks(self): 
         if self.loggedin == False:
             return 
-        querystr = '''
-        select * from book 
-        where userid = (select id from user where name = ?)
-        '''
-        self.cursor.execute(querystr, (self.username,))
-        userBooks = self.cursor.fetchall()
-        return userBooks
 
+        return self.db.retrieveUserBooksByUsername(self.username)
+
+    # function delegate
     def retrieveRecentBooks(self, limit = 5):
-
-        querystr = '''
-        select name, created_time, id from book
-        order by created_time DESC
-        limit ?
-        '''
-        self.cursor.execute(querystr, (limit,))
-        recentBooks = self.cursor.fetchall()
-        return recentBooks
+        return self.db.retrieveRecentBooks(limit)
 
     def run(self):
         # 这个mainloop会不停的监听任何事件的发生，然后重画这个window

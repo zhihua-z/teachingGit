@@ -1,8 +1,10 @@
 import tkinter as tk
 
 from Page import Page
-from Book import Chapter
+from Book import Chapter, DBChapter 
 import Styles
+
+from datetime import datetime
 
 class ContentPage(Page):
     
@@ -24,19 +26,31 @@ class ContentPage(Page):
             
             if c.status == 'Changed':
                 tname = c.title + '*'
-            self.newFile = tk.Button(master = self.frame, 
-                                     text = tname, 
-                                     command = lambda chapter = c: self.changeChapter(chapter),
-                                     highlightbackground = Styles.contentPageColor
+            self.newFile = tk.Button(master = self.frame
+                                     , text = tname
+                                     , command = lambda chapter = c: self.changeChapter(chapter)
+                                     , highlightbackground = Styles.contentPageColor
+                                     , foreground = Styles.selectedColor if c.id == self.app.currentChapter.id else Styles.foregroundColor
                                      )
+            self.newFile.bind('<Button-2>', lambda event, chapter = c: self.show_popup(event, chapter))
             self.newFile.place(x = 5, y = 5 + count * 40)
             
             count += 1
+            
+    def show_popup(self, event, chapter):
+        self.app.rightMenu.menu.delete(0, tk.END)  # Clear the existing menu items
+        self.app.rightMenu.menu.add_command(label="Save", command=lambda c = chapter: self.deleteChapter(c))
+        self.app.rightMenu.menu.add_command(label="Export", command=lambda c = chapter: self.deleteChapter(c))
+        self.app.rightMenu.menu.add_command(label="Delete", command=lambda c = chapter: self.deleteChapter(c))
+        self.app.rightMenu.menu.post(event.x_root, event.y_root)
+    
+    # lambda chapter = c:self.deleteChapter(chapter)
+    def deleteChapter(self, chapter):
+        print(chapter.id)
         
-    def addChapter(self, chapterName = '', content = '', filePath = ''):
-        c = Chapter(chapterName, content, filePath)
-        self.app.book.addChapter(c)
         
+    def addChapter(self, chapter):
+        self.app.book.addChapter(chapter)
         self.app.refresh()
         
     def changeChapter(self, chapter):

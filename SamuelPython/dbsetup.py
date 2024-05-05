@@ -49,7 +49,12 @@ cursor.execute(create_table_book_query)
 cursor.execute(create_table_chapter_query)
 cursor.execute(create_user_query)
 
-
+# alter table
+alter_chapter_query_add_status = '''
+alter table chapter
+add status boolean default 1 not null
+'''
+cursor.execute(alter_chapter_query_add_status)
 
 connection.commit()
 connection.close()

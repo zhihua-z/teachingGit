@@ -2,10 +2,13 @@ import tkinter as tk
 from tkinter.filedialog import askopenfilename, asksaveasfilename
 
 from Page import Page
+from Book import DBBook, DBChapter
 
 from UI.ImageButton import ImageButton, Label
 
 import Styles
+
+from datetime import datetime
 
 class ToolPage(Page):
     
@@ -28,8 +31,8 @@ class ToolPage(Page):
             filename = 'img/open_file.png', 
             size = (25, 25), 
             position = (10, 10), 
-            command = self.open_file,
-            text = 'Open file'
+            command = self.import_text_file,
+            text = 'Import file'
         )
         self.registerUI(t)
 
@@ -38,8 +41,8 @@ class ToolPage(Page):
             filename = 'img/save_file.png',
             size = (25, 25),
             position = (110, 10),
-            command = self.save_file,
-            text = 'Save file'
+            command = self.export_text_file,
+            text = 'Export file'
         )
         self.registerUI(t)
         
@@ -56,6 +59,7 @@ class ToolPage(Page):
         t = Label(
             master = self.frame,
             text = 'Font',
+            font = None, 
             position = ((10, 100)),
         )
         self.register(t)
@@ -125,6 +129,7 @@ class ToolPage(Page):
         t = Label(
             master = self.frame,
             text = 'Align',
+            font = None, 
             position = ((10, 315))
         )
         self.register(t)
@@ -188,32 +193,53 @@ class ToolPage(Page):
     def save_file(self):
         # save the current chapter to db
         # change the state to saved
+        current_time = datetime.now()
+        
+        book = self.app.currentBook
+        if book.localOnly:
+            
+            # 1. create a new book record in the database
+            self.app.db.createBook(book.name, self.app.userid, current_time)
+            
+            # 1.1 get the ID of the book we created just now
+            bookresult = self.app.db.retrieveBookByCreatedTime(current_time)
+            self.app.currentBookId = bookresult[0][0]
+            book.localOnly = False
+        
         
         chapter = self.app.currentChapter
+        
+        title = chapter.title
+        content = chapter.content
 
-        querystr = '''
-        update chapter
-        set title = ?, content = ?
-        where id = ?
-        '''
-        
-        self.app.cursor.execute(querystr, (chapter.title, chapter.content, chapter.id))
-        self.app.connection.commit()
+        if chapter.localOnly:
+            self.app.db.createChapter(title = title, 
+                                      content = content, 
+                                      bookid = self.app.currentBookId, 
+                                      createdTime = current_time)
+            
+            
+            # 1.1 get the ID of the book we created just now
+            chapterResult = self.app.db.retrieveChapterByCreatedTime(current_time)
+            self.app.currentChapterId = chapterResult[0][0]
+            chapter.id = chapterResult[0][0]
+            
+            chapter.localOnly = False
+            
+            # update back the newly created id
+        else:
+            self.app.db.updateChapter(title, content, chapter.id)
+
         self.app.currentChapter.status = 'Ok'
-        
 
     def export_text_file(self):
-        
-        if self.app.currentChapter.filePath:
-            self.app.current_filename = self.app.currentChapter.filePath
-        else:
-            self.app.current_filename = asksaveasfilename(
-                defaultextension = ".txt",
-                filetypes = [("Text Files", "*.txt"), ("All Files", "*.*")],
-            )
+        self.app.current_filename = asksaveasfilename(
+            defaultextension = ".txt",
+            filetypes = [("Text Files", "*.txt"), ("All Files", "*.*")],
+        )
 
-            if not self.app.current_filename:
-                return
+        if not self.app.current_filename:
+            return
 
         with open(self.app.current_filename, mode = "w", encoding = "utf-8") as output_file:
             
@@ -224,7 +250,16 @@ class ToolPage(Page):
                 output_file.write(text)
 
     def new_file(self):
-        self.app.contentPage.addChapter()
-        self.app.currentChapter = self.app.book.chapters[-1]
+        current_time = datetime.now()
+
+        newChapter = DBChapter(id = 0, 
+                            title = '', 
+                            content = '', 
+                            bookid = self.app.currentBookId,
+                            created_time = current_time,
+                            localOnly = True)
+
+        self.app.contentPage.addChapter(newChapter)
+        self.app.currentChapter = newChapter
         self.app.writeArea.draw()
-        self.app.refresh()
+        self.app.refresh() 

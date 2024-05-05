@@ -48,7 +48,6 @@ class WriteArea(Page):
             
             self.content.insert(tk.END, text)
             self.content.tag_add("h1", "1.0", "2.0")
-    
 
     def setBold(self):
         start_index = self.content.index("sel.first")

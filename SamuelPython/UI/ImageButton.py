@@ -62,14 +62,45 @@ class ImageButton:
 
 class Label:
     # input: file location, (size: tuple), (position: tuple)
-    def __init__(self, master, text, position):
+    def __init__(self, master, text, font, position):
         self.position = position
         self.text = text 
         self.label = None
+        self.font = None
         
         self.label = tk.Label(
             master = master, 
             text = text, 
+            font = font, 
+            background = Styles.backgroundColor,
+            highlightbackground = Styles.backgroundColor,
+            foreground = Styles.foregroundColor
+        )
+        self.label.place(x = position[0], y = position[1])
+        
+    def destroy(self):
+        self.component.destroy()
+        self.label.destroy()
+        del self.image
+        del self.photoImage
+        
+        self.image = None
+        self.photoImage = None
+        self.component = None
+        self.label = None
+
+class Label:
+    # input: file location, (size: tuple), (position: tuple)
+    def __init__(self, master, text, font, position):
+        self.position = position
+        self.text = text 
+        self.label = None
+        self.font = None
+        
+        self.label = tk.Label(
+            master = master, 
+            text = text, 
+            font = font, 
             background = Styles.backgroundColor,
             highlightbackground = Styles.backgroundColor,
             foreground = Styles.foregroundColor

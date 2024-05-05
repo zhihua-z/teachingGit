@@ -7,3 +7,5 @@ contentPageColor = '#b19cd9'
 
 # Blue content page
 #contentPageColor = '#add8e6'
+
+selectedColor = '#cc1111'
