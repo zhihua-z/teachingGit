@@ -7,7 +7,7 @@ from TucengPage import TucengPage
 
 from SubMenu import TiaozhengPage, LiangduPage, GongnengPage
 
-class Caidan:
+class 菜单:
     def __init__(self, name, page):
         self.name = name
         self.page = page
@@ -26,15 +26,16 @@ class App:
         self.openTiaozhengPage = False
         
         self.tuceng = [] # 保存所有的图层，每一个图层都是一张照片
+        self.currenttuceng = None#记录当前图层是哪一个
         
         self.tiaozhengPage = TiaozhengPage(80, 0, 200, 700, self)
         self.liangdupage = LiangduPage(80, 0, 200, 700, self)
         self.gongnengPage = GongnengPage(80, 0, 200, 700, self)
         
         self.caidanDict = {
-            '调整': Caidan('调整', self.tiaozhengPage),
-            '亮度': Caidan('亮度', self.liangdupage),
-            '功能': Caidan('功能', self.gongnengPage)
+            '调整': 菜单('调整', self.tiaozhengPage),
+            '亮度': 菜单('亮度', self.liangdupage),
+            '功能': 菜单('功能', self.gongnengPage)
         }
     
     def draw(self):

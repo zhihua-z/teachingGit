@@ -36,19 +36,22 @@ class TucengPage(Page):
                                     (100,int(daxiao[1]/daxiao[0]*100)),
                                     t.name,
                                     (18, self.currPosition),
-                                    command =lambda tuceng=t: self.clickButton(tuceng),
+                                    command =lambda tuceng=t: self.fn点击按钮(tuceng),
                                     labelPos=(5,int(daxiao[1]/daxiao[0]*100)+5 )
                                     ,current = t.current)
             self.register(self.add1)
             self.currPosition += int(daxiao[1]/daxiao[0]*100) +30
-        
-    def clickButton(self,t):
+
+
+    #点击按钮切换图层
+    def fn点击按钮(self,t):
         for tuceng in self.app.tuceng:
             tuceng.current = False
         t.current = True  
-        self.app.tucengPage.redraw()
+        self.app.currenttuceng = t
+        self.app.tucengPage.fn重画()
         
-    def redraw(self):
+    def fn重画(self):
         self.clear()
         self.currPosition = 22
         self.draw()

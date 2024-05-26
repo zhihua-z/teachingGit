@@ -45,7 +45,7 @@ class Canvas(Page):
         self.picture.place(x = 0, y = 0)
         self.register(self.picture)
     
-    def redraw(self):
+    def fnfn重画(self):
         self.clear()
         self.draw()
     

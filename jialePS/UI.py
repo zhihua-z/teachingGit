@@ -115,3 +115,52 @@ class ImageButton2:
         self.button.destroy()
         self.label.destroy()
         #self.frame.destroy()
+
+class btn调整按钮:
+    def __init__(self, master, text, labelText, position, command = None,):
+        self.button = None
+        self.label = None
+        self.entry = None
+        
+        self.label = tk.Label(
+            master=master, 
+            text=labelText,
+            background=styles.menuBackgroundColor,
+            foreground=styles.foregroundColor
+        )
+        self.label.place(x = position[0], y = position[1])
+        
+        self.entry = tk.Entry(master=master, width=5)
+        self.entry.place(x = position[0] + 60, y = position[1])
+        
+        self.button = tk.Button(
+            master=master, 
+            text=text, 
+            highlightbackground=styles.menuBackgroundColor,
+            command=command
+        )
+        self.button.place(x = position[0], y = position[1] + 30)
+        
+    def destroy(self):
+        self.button.destroy()
+        self.label.destroy()
+        self.entry.destroy()
+        
+        
+
+class btn功能按钮:
+    def __init__(self, master, text, position, command = None,):
+        self.button = None
+        
+        self.button = tk.Button(
+            master=master, 
+            text=text, 
+            highlightbackground=styles.menuBackgroundColor,
+            command=command
+        )
+        self.button.place(x = position[0], y = position[1])
+        
+    def destroy(self):
+        self.button.destroy()
+        
+        
