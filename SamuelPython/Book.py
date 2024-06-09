@@ -32,6 +32,10 @@ class DBBook:
         if chapter.title == '':
             chapter.title = '第' + str(len(self.chapters) + 1) + '章'
         self.chapters.append(chapter)
+
+    def removeChapter(self, chapter):
+        if chapter in self.chapters:
+          self.chapters.remove(chapter)
         
 class DBChapter:
     def __init__(self, id, title, content, bookid, created_time, localOnly = False):

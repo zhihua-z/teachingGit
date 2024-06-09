@@ -7,8 +7,3 @@ class MyImage:
     def __init__(self, image, filename):
         self.image = image
         self.filename = filename
-        self.hasAlpha = False
-        
-        if filename[-3:] == 'png':
-            self.hasAlpha = True
-        pass

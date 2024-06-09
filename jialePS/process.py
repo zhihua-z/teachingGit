@@ -45,72 +45,103 @@ def compose(imgs, width, height):
                 # 把提取出来的颜色放到img里
                 img.putpixel((x, y), pixel)
     
-    
     return img
 
 
 #输入一张照片，多少亮度
 #输出一张照片
 #这个函数会调整照片里的每一个像素点的颜色来调整亮度
-def liangdu(img, ld, hasAlpha = False):
-
-    newimg = Image.new('RGBA', (img.width, img.height), (255, 255, 255, 255))
-
+def liangdu(img, ld):
     for y in range(img.height):
     
         for x in range(img.width):
-            
-            # 提取像素颜色
-            pixel = img.getpixel((x, y))
-            r, g, b, a = (255, 255, 255, 255)
-            if hasAlpha:
-                r,g,b,a = pixel
-            else:
-                r,g,b = pixel
+            if img.mode =='RGB':
+                # 提取像素颜色
+                r, g, b = img.getpixel((x, y))
 
-            r = clamp(r+ld)
-            g = clamp(g+ld)
-            b = clamp(b+ld)
-            # 把提取出来的颜色放到img里
-            newimg.putpixel((x, y), (r,g,b,a))
+                r = clamp(r+ld)
+                g = clamp(g+ld)
+                b = clamp(b+ld)
+                a = 255
+                # 把提取出来的颜色放到img里
+                img.putpixel((x, y), (r,g,b,a))
+            elif img.mode =='RGBA':
+                # 提取像素颜色
+                r, g, b, a = img.getpixel((x, y))
 
-    return newimg
+                r = clamp(r+ld)
+                g = clamp(g+ld)
+                b = clamp(b+ld)
+                # 把提取出来的颜色放到img里
+                img.putpixel((x, y), (r,g,b,a))
 
-def baohedu(img, bh, hasAlpha = False):
-    
-    newPixels = []
-    
-    for y in range(img.height):
-        for x in range(img.width):
-            r, g, b = img.getpixel((x, y))
-            
-            pingjunzhi = (r + g + b) / 3
-            
-            newr = int(clamp(r + (r - pingjunzhi) * bh))
-            newg = int(clamp(g + (g - pingjunzhi) * bh))
-            newb = int(clamp(b + (b - pingjunzhi) * bh))
+    return img
+
+def baohedu(img, bh):
         
-            newPixels.append((newr, newg, newb))
+    for y in range(img.height):
+        for x in range(img.width):
+            if img.mode =='RGB':
+                r, g, b = img.getpixel((x, y))
+                
+                pingjunzhi = (r + g + b) / 3
+                
+                newr = int(clamp(r + (r - pingjunzhi) * bh))
+                newg = int(clamp(g + (g - pingjunzhi) * bh))
+                newb = int(clamp(b + (b - pingjunzhi) * bh))
+                newa = 255
+            
+                img.putpixel((x, y),(newr, newg, newb,newa))
+            elif img.mode =='RGBA':
+                r, g, b ,a= img.getpixel((x, y))
+                
+                pingjunzhi = (r + g + b) / 3
+                
+                newr = int(clamp(r + (r - pingjunzhi) * bh))
+                newg = int(clamp(g + (g - pingjunzhi) * bh))
+                newb = int(clamp(b + (b - pingjunzhi) * bh))
+                newa = int(a)
+            
+                img.putpixel((x, y),(newr, newg, newb,newa))            
     
-    image = Image.new(img.mode, img.size)  
-    image.putdata(newPixels)  
-
-    return image
+    return img
 
 
-def qiutian_lvjing(img, bh, hasAlpha = False):
+def fn调整透明度(img, 透明度):
+    if img.mode =='RGBA':
+        for y in range(img.height):
+            for x in range(img.width):
+
+                r,g,b,a = img.getpixel((x, y))
+
+                a = int(a * 透明度)
+                img.putpixel((x, y),(r, g, b, a))
+    elif img.mode =='RGB':
+        for y in range(img.height):
+            for x in range(img.width):
+
+                r,g,b = img.getpixel((x, y))
+
+                a = 255
+                img.putpixel((x, y),(r, g, b,a))       
+    
+    return img
+
+def qiutian_lvjing(img, bh):
     
     newPixels = []
     
     for y in range(img.height):
         for x in range(img.width):
-            r, g, b = img.getpixel((x, y))
+            r, g, b= img.getpixel((x, y))
             
             pingjunzhi = (r + g + b) / 3
             
             newr = int(clamp(r + (r - pingjunzhi) * bh))
             newg = int(clamp(g + (g - pingjunzhi) / bh))
             newb = int(clamp(b + (b - pingjunzhi) * bh))
+
+
         
             newPixels.append((newr, newg, newb))
     

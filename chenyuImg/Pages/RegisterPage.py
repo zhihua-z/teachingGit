@@ -52,6 +52,28 @@ class RegisterPage(Panel):
         username = self.username.get()
         password = self.password.get()
         
+        result = self.app.db.determine_username(username, password)
+        
+        if result == 'Ok':
+            # ok
+            # return successful registration
+            if self.message is not None:
+                self.message.destroy()
+                
+            self.message = tk.Label(master=self.master, 
+                                    text="successfully registered user", 
+                                    foreground='green',
+                                    background=styles.app_background)
+            self.message.place(x = 500, y = 330)
+        elif result == 'error_exist':
+            if self.message is not None:
+                self.message.destroy()
+                
+            self.message = tk.Label(master=self.master, 
+                                    text="user already exists", 
+                                    foreground='red',
+                                    background=styles.app_background)
+            self.message.place(x = 500, y = 230)
 
      def show_login_page(self):
         self.app.go_to_register_page = False

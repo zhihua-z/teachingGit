@@ -6,9 +6,12 @@ from Pages.ContentPage import ContentPage
 from Pages.StatusBar import StatusBar
 from Pages.LoginPage import LoginPage
 from Pages.WelcomePage import WelcomePage
-from Pages.RIghtMenu import RightMenu
+from Pages.RightMenu import RightMenu
 from Book import Book, Chapter, DBBook, DBChapter 
 from DBconnection import DBconnection
+import Modal
+
+from ai import GPT
 
 class App:
     
@@ -45,6 +48,9 @@ class App:
         self.loggedin = False
         self.openedBook = False
         
+        self.modal = None
+        self.modalReturn = ""
+        
 
         self.contentPage = ContentPage(self)
         self.writeArea = WriteArea(self)
@@ -53,7 +59,6 @@ class App:
         self.loginPage = LoginPage(self)
         self.welcomePage = WelcomePage(self)
         self.rightMenu = RightMenu(self)
-        
 
     def handleKeyPress(self, event):
         if self.loggedin == False:
@@ -73,6 +78,28 @@ class App:
 
         self.window = tk.Tk()
         self.window.geometry("1250x725")
+        
+        self.menubar = tk.Menu(master=self.window)
+        
+        self.fileMenubar = tk.Menu(master=self.menubar, tearoff=0)
+        self.fileMenubar.add_command(label="Open file")
+        self.fileMenubar.add_command(label="Open book")
+        self.fileMenubar.add_command(label="Close book", command=self.goToWelcomePage)
+        self.fileMenubar.add_separator()
+        self.fileMenubar.add_command(label="Quit")
+        self.menubar.add_cascade(label="File", menu=self.fileMenubar)
+        
+        self.editMenubar = tk.Menu(master=self.menubar)
+        self.menubar.add_cascade(label="Edit", menu=self.editMenubar)
+        
+        self.aiMenubar = tk.Menu(master=self.menubar)
+        self.menubar.add_cascade(label="AI", menu=self.aiMenubar)
+        self.aiMenubar.add_command(label="Open GPT conversation", command=self.openGPT)
+        
+        self.helpMenubar = tk.Menu(master=self.menubar)
+        self.menubar.add_cascade(label="Help", menu=self.helpMenubar)
+        
+        self.window.config(menu=self.menubar)
 
         if self.username is not None:
             self.window.title('Editor: ' + self.username)
@@ -83,8 +110,16 @@ class App:
         self.window.bind("<Control-s>", self.handleKeyAutoSave)
         self.window.bind("<KeyRelease>", self.inputChanged)
         
+        # set up our modal object
+        self.modal = Modal.Modal(self)
+        
         self.drawMainPage()
 
+    
+    def openGPT(self):
+        self.modal.showChatPopup("GPT-3.5-turbo")
+        print('==-==-=-=-=-=-=-=-')
+        print(self.modalReturn)
         
     def drawMainPage(self):
         self.rightMenu.draw()
@@ -98,9 +133,11 @@ class App:
             else:
                 self.userbook = self.retrieveUserBooks()
                 self.recentbook = self.retrieveRecentBooks() 
-                self.welcomePage.draw()      
+                self.welcomePage.draw()
         else:
             self.loginPage.draw()   
+            self.modal.showInputPopup(title = "Warning", label = "some warning")
+            print("input popup returned", self.modalReturn)
     
     def refresh(self):
         self.contentPage.draw()
@@ -145,3 +182,17 @@ class App:
     def run(self):
         # 这个mainloop会不停的监听任何事件的发生，然后重画这个window
         self.window.mainloop()
+        
+    def goToWelcomePage(self):
+        # check if book has been modified
+        # if modified, prompt user if they want to save the changes
+        
+        if self.loggedin:
+            if self.openedBook:
+                pass
+                # 清理那四个窗口
+            else:
+                self.welcomePage.clear()
+
+        self.openedBook = False
+        self.draw()

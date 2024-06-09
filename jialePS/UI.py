@@ -2,8 +2,10 @@
 import tkinter as tk
 from PIL import Image, ImageTk
 import styles
+import copy
+import process
 
-class ImageButton:
+class class图片按钮:
     
     def __init__(self, master, imagePath, size, text, position, command = None, labelPos = (5, 43)):
         self.img = Image.open(imagePath)    
@@ -17,15 +19,15 @@ class ImageButton:
         
         self.button = tk.Button(master=master, 
                       image=self.photoImage, 
-                      highlightbackground=styles.menuBackgroundColor,
-                      foreground=styles.foregroundColor,
+                      highlightbackground=styles.菜单背景颜色,
+                      foreground=styles.前景颜色,
                       command=command)
         self.button.place(x = buttonPosition[0], y = buttonPosition[1])
         
         self.label = tk.Label(master=master, 
                      text=text, 
-                     background=styles.menuBackgroundColor,
-                     foreground=styles.foregroundColor)
+                     background=styles.菜单背景颜色,
+                     foreground=styles.前景颜色)
         self.label.place(x = labelPosition[0], y = labelPosition[1])
 
     def destroy(self):
@@ -37,64 +39,34 @@ class ImageButton:
         self.label.destroy()
 
 
-
-class ImageButton2:
-    def __init__(self, master, img, size, text, position, command = None, labelPos = (5, 43),current = False):
-        self.img = img
+class class图片按钮2:
+    def __init__(self, master, img, size, text, position, command = None, labelPos = (5, 43),current = False, 可见 = True):
+        self.img = copy.deepcopy(img)
         self.img = self.img.resize(size)
         self.current = current
         
         buttonPosition = position
         labelPosition = (position[0] + labelPos[0], position[1] + labelPos[1])
         
-        
-        # 通过ImageTk把这张照片转换为tkinter可以使用的格式
-        self.photoImage = ImageTk.PhotoImage(self.img)
-        color = styles.menuBackgroundColor
-        if (current == True):
-            color = 'red'
-class ImageButton2:
-    def __init__(self, master, img, size, text, position, command = None, labelPos = (5, 43),current = False):
-        self.img = img
-        self.img = self.img.resize(size)
-        self.current = current
-        
-        buttonPosition = position
-        labelPosition = (position[0] + labelPos[0], position[1] + labelPos[1])
-        
-        
-        # 通过ImageTk把这张照片转换为tkinter可以使用的格式
-        self.photoImage = ImageTk.PhotoImage(self.img)
-        color = styles.menuBackgroundColor
-        
-        if (self.current == True):
-            color = 'red'
-class ImageButton2:
-    def __init__(self, master, img, size, text, position, command = None, labelPos = (5, 43),current = False):
-        self.img = img
-        self.img = self.img.resize(size)
-        self.current = current
-        
-        buttonPosition = position
-        labelPosition = (position[0] + labelPos[0], position[1] + labelPos[1])
-        
+        if 可见 == False:
+            self.img = process.liangdu(self.img, -100)
         
         # 通过ImageTk把这张照片转换为tkinter可以使用的格式
         self.photoImage = ImageTk.PhotoImage(self.img)
 
-        color = styles.menuBackgroundColor
+        color = styles.菜单背景颜色
         
         if (self.current == True):
             color = 'red'
 
-            
+        
 
         #self.frame = tk.Frame(master, bd=2, relief="solid",background = color)  # bd 是边框宽度，relief 是边框样式  
            
         self.button = tk.Button(master=master, 
                       image=self.photoImage, 
                       highlightbackground=color,
-                      foreground=styles.foregroundColor,
+                      foreground=styles.前景颜色,
                       command=command)
         self.button.place(x = buttonPosition[0], y = buttonPosition[1])
 
@@ -103,7 +75,7 @@ class ImageButton2:
         self.label = tk.Label(master=master, 
                      text=text, 
                      background=color,
-                     foreground=styles.foregroundColor)
+                     foreground=styles.前景颜色)
         self.label.place(x = labelPosition[0], y = labelPosition[1])
 
     def destroy(self):
@@ -116,7 +88,7 @@ class ImageButton2:
         self.label.destroy()
         #self.frame.destroy()
 
-class btn调整按钮:
+class class调整按钮:
     def __init__(self, master, text, labelText, position, command = None,):
         self.button = None
         self.label = None
@@ -125,8 +97,8 @@ class btn调整按钮:
         self.label = tk.Label(
             master=master, 
             text=labelText,
-            background=styles.menuBackgroundColor,
-            foreground=styles.foregroundColor
+            background=styles.菜单背景颜色,
+            foreground=styles.前景颜色
         )
         self.label.place(x = position[0], y = position[1])
         
@@ -136,7 +108,7 @@ class btn调整按钮:
         self.button = tk.Button(
             master=master, 
             text=text, 
-            highlightbackground=styles.menuBackgroundColor,
+            highlightbackground=styles.菜单背景颜色,
             command=command
         )
         self.button.place(x = position[0], y = position[1] + 30)
@@ -148,14 +120,14 @@ class btn调整按钮:
         
         
 
-class btn功能按钮:
+class class功能按钮:
     def __init__(self, master, text, position, command = None,):
         self.button = None
         
         self.button = tk.Button(
             master=master, 
             text=text, 
-            highlightbackground=styles.menuBackgroundColor,
+            highlightbackground=styles.菜单背景颜色,
             command=command
         )
         self.button.place(x = position[0], y = position[1])

@@ -147,8 +147,23 @@ class ToolsPanel(Panel):
         4. delete all the previous version of this project
         
         
-        '''
-        pass
+        ''' 
+        count = 0
+        for l in self.app.layer:
+            image_size = l.image.size
+            image_position = (0, 0)
+            layer_id = count
+            path = l.path
+            brightness = l.brightness_val
+            username = self.app.username
+            versionId = l.versionId + 1
+            
+            image_info = [image_size, image_position, layer_id, path, brightness, username, versionId]
+            self.app.db.insertImageByProjectId(image_info, self.app.current_project_id)
+            l.versionId = versionId
+            
+            count += 1
+        
         
             
 

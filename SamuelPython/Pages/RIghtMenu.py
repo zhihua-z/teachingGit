@@ -13,8 +13,7 @@ class RightMenu(Page):
         self.clear()
         
         self.menu = tk.Menu(self.app.window, tearoff = 0) 
-        self.menu.add_command(label ="New Chapter") 
-        self.menu.add_command(label ="Delete")
+        self.menu.add_command(label = "New Chapter") 
     
     def popup(self, event):
         print(event)
@@ -23,3 +22,6 @@ class RightMenu(Page):
             self.menu.tk_popup(event.x_root, event.y_root) 
         finally: 
             self.menu.grab_release() 
+     
+    
+    

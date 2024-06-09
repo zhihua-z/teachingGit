@@ -6,7 +6,7 @@ import styles
 
 from tkinter.filedialog import askopenfilename, asksaveasfilename
 
-from UI import ImageButton, btn调整按钮, btn功能按钮
+from UI import class图片按钮, class调整按钮, class功能按钮
 from Tuceng import Tuceng
 from process import liangdu, baohedu
 
@@ -14,14 +14,14 @@ from MyImage import MyImage
 
 
 # Page 它会控制当前页面应该画什么
-class TiaozhengPage(Page):
+class 调整页面(Page):
     def __init__(self, x, y, w, h, a):
         super().__init__(x, y, w, h, a)
 
     def draw(self):
         # 画出这个页面的分区
         self.frame = tk.Frame(
-            width=self.width, height=self.height, background=styles.menuBackgroundColor
+            width=self.width, height=self.height, background=styles.菜单背景颜色
         )
         self.frame.place(x=self.posX, y=self.posY)
         self.register(self.frame)
@@ -32,39 +32,48 @@ class TiaozhengPage(Page):
 
 
 # Page 它会控制当前页面应该画什么
-class LiangduPage(Page):
+class 图层页面(Page):
     def __init__(self, x, y, w, h, a):
         super().__init__(x, y, w, h, a)
 
     def draw(self):
         # 画出这个页面的分区
         self.frame = tk.Frame(
-            width=self.width, height=self.height, background=styles.menuBackgroundColor
+            width=self.width, height=self.height, background=styles.菜单背景颜色
         )
         self.frame.place(x=self.posX, y=self.posY)
         self.register(self.frame)
 
-        self.label = tk.Label(master=self.frame, text="亮度")
+        self.label = tk.Label(master=self.frame, text="图层")
         self.label.place(x=0, y=0)
         self.register(self.label)
 
         # 亮度
-        self.亮度 = btn调整按钮(
+        self.btn亮度 = class调整按钮(
             master=self.frame,
             text='调整亮度',
             labelText='亮度',
             position=((0, 40)),
-            command=self.调整亮度
+            command=self.fn调整亮度
         )        
         
         # 饱和度
-        self.饱和度 = btn调整按钮(
+        self.btn饱和度 = class调整按钮(
             master=self.frame,
             text='调整饱和度',
             labelText='饱和度',
             position=((0, 120)),
-            command=self.调整饱和度
-        )   
+            command=self.fn调整饱和度
+        )    
+        
+        # 透明度
+        self.btn透明度 = class调整按钮(
+            master=self.frame,
+            text='调整透明度',
+            labelText='透明度',
+            position=((0, 200)),
+            command=self.fn调整透明度
+        )  
         
     # 调整亮度
     # 1.获取当前图层的照片
@@ -73,46 +82,53 @@ class LiangduPage(Page):
     # 4.替换当前图层的照片
     # 5。刷新画板
 
-    def 调整亮度(self):
+    def fn调整亮度(self):
         
         if self.app.currenttuceng is None:
             print("没有选中图层")
             return
+        
+        self.app.currenttuceng.亮度 = int(self.btn亮度.entry.get())
 
-        self.app.currenttuceng.image = liangdu(
-            self.app.currenttuceng.originalImage, int(self.亮度.entry.get(), self.app.currenttuceng.imageSetting.hasAlpha)
-        )
-
-        self.app.canvas.redraw()
+        self.app.canvas.fn重画()
     
-    def 调整饱和度(self):
+    def fn调整饱和度(self):
         
         if self.app.currenttuceng is None:
             print("没有选中图层")
             return
 
-        self.app.currenttuceng.image = baohedu(
-            self.app.currenttuceng.originalImage, float(self.饱和度.entry.get()), self.app.currenttuceng.imageSetting.hasAlpha
-        )
+        self.app.currenttuceng.饱和度 = float(self.btn饱和度.entry.get())
+        
+        self.app.canvas.fn重画()
+        
+    
+    def fn调整透明度(self):
+        
+        if self.app.currenttuceng is None:
+            print("没有选中图层")
+            return
+        
+        self.app.currenttuceng.透明度 = float(self.btn透明度.entry.get())
 
-        self.app.canvas.redraw()
+        self.app.canvas.fn重画()
 
 
 # Page 它会控制当前页面应该画什么
-class GongnengPage(Page): # pg功能页面
+class 功能页面(Page): # pg功能页面
     def __init__(self, x, y, w, h, a):
         super().__init__(x, y, w, h, a)
 
     def draw(self):
         # 画出这个页面的分区
         self.frame = tk.Frame(
-            width=self.width, height=self.height, background=styles.menuBackgroundColor
+            width=self.width, height=self.height, background=styles.菜单背景颜色
         )
         self.frame.place(x=self.posX, y=self.posY)
         self.register(self.frame)
 
         # 打开图片
-        t = btn功能按钮(
+        t = class功能按钮(
             master=self.frame,
             text='打开图片',
             position=((5, 5)),
@@ -121,7 +137,7 @@ class GongnengPage(Page): # pg功能页面
         self.register(t)
         
         # 导入图片
-        t = btn功能按钮(
+        t = class功能按钮(
             master=self.frame,
             text='导入图片',
             position=((5, 35)),
@@ -130,7 +146,7 @@ class GongnengPage(Page): # pg功能页面
         self.register(t)
         
         # 提升图层
-        t = btn功能按钮(
+        t = class功能按钮(
             master=self.frame,
             text='提升图层',
             position=((5, 65)),
@@ -140,7 +156,7 @@ class GongnengPage(Page): # pg功能页面
         
         
         # 降低图层
-        t = btn功能按钮(
+        t = class功能按钮(
             master=self.frame,
             text='降低图层',
             position=((5, 95)),
@@ -149,11 +165,48 @@ class GongnengPage(Page): # pg功能页面
         self.register(t)
         
 
+    """
+    图层列表: [tuceng1, tuceng2, tuceng3]  
+              0        1        2
+    提升tuceng2:
+    图层列表: [tuceng2, tuceng1, tuceng3] 
+              1        0        2 
+    """
     def fn提升图层(self):
-        pass
-
+        
+        当前图层 = self.app.currenttuceng
+        图层列表 = self.app.tuceng
+        
+        for i in range(1, len(图层列表)):
+            if 图层列表[i] == 当前图层:
+                临时变量 = 图层列表[i]
+                图层列表[i] = 图层列表[i - 1]
+                图层列表[i - 1] = 临时变量
+                break
+        
+        self.app.tucengPage.fn重画()
+        self.app.canvas.fn重画()
+        
+        
+    """
+    
+    图层列表: [tuceng1, tuceng2, tuceng3]  
+              0        1        2
+    """
     def fn降低图层(self):
-        pass
+                
+        当前图层 = self.app.currenttuceng
+        图层列表 = self.app.tuceng
+        
+        for i in range(0, len(图层列表) - 1):
+            if 图层列表[i] == 当前图层:
+                临时变量 = 图层列表[i]
+                图层列表[i] = 图层列表[i + 1]
+                图层列表[i + 1] = 临时变量
+                break
+        
+        self.app.tucengPage.fn重画()
+        self.app.canvas.fn重画()
 
     def openImage(self):
         # 打开新图片的时候，先清除所有当前图层
@@ -219,12 +272,20 @@ class GongnengPage(Page): # pg功能页面
 
         # 打开一张照片
         img = Image.open(filename)
+        
+        # 转换为RGBA色彩空间
+        if img.mode == 'RGB':
+            img = img.convert('RGBA')
+            
+            # 创建一个透明度通道给他
+            alphaChannel = Image.new("L", img.size, 255)
+            img.putalpha(alphaChannel)
 
         img_size = img.size
         canvas_size = (self.app.canvas.width, self.app.canvas.height)
 
-        border_size = (60, 60)
-        canvas_size = (canvas_size[0] - border_size[0], canvas_size[1] - border_size[1])
+        # border_size = (60, 60)
+        # canvas_size = (canvas_size[0] - border_size[0], canvas_size[1] - border_size[1])
 
         factor_x = img_size[0] / canvas_size[0]
         factor_y = img_size[1] / canvas_size[1]
@@ -259,7 +320,7 @@ class GongnengPage(Page): # pg功能页面
             name=tucengName, img=img, x=mov_x, y=mov_y, myImage=myImage, current=False
         )
 
-        self.app.tuceng.append(t)
+        self.app.tuceng = [t] + self.app.tuceng
 
         self.app.canvas.fn重画()
         self.app.tucengPage.fn重画()

@@ -39,20 +39,24 @@ class ContentPage(Page):
             
     def show_popup(self, event, chapter):
         self.app.rightMenu.menu.delete(0, tk.END)  # Clear the existing menu items
-        self.app.rightMenu.menu.add_command(label="Save", command=lambda c = chapter: self.deleteChapter(c))
-        self.app.rightMenu.menu.add_command(label="Export", command=lambda c = chapter: self.deleteChapter(c))
-        self.app.rightMenu.menu.add_command(label="Delete", command=lambda c = chapter: self.deleteChapter(c))
+        self.app.rightMenu.menu.add_command(label = "Save", 
+                                            command = lambda c = chapter: self.app.toolPage.save_file())
+        self.app.rightMenu.menu.add_command(label = "Export", 
+                                            command = lambda c = chapter: self.app.toolPage.export_text_file())
+        self.app.rightMenu.menu.add_command(label = "Delete", 
+                                            command = lambda c = chapter: self.app.toolPage.delete_file(c))
+        self.app.rightMenu.menu.add_command(label = "New Chapter", 
+                                            command = lambda c = chapter: self.app.toolPage.new_file())
         self.app.rightMenu.menu.post(event.x_root, event.y_root)
-    
-    # lambda chapter = c:self.deleteChapter(chapter)
-    def deleteChapter(self, chapter):
-        print(chapter.id)
-        
         
     def addChapter(self, chapter):
         self.app.book.addChapter(chapter)
         self.app.refresh()
-        
+
     def changeChapter(self, chapter):
         self.app.currentChapter = chapter
         self.app.refresh()
+    
+    def removeChapter(self, chapter):
+        if chapter in self.chapters:
+            self.chapters.remove(chapter)

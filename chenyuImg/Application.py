@@ -133,36 +133,33 @@ class Application:
 
     def update_render(self):
         # update and merge all layers
-        layer = self.layer[self.current_layer_index]
-        result_image = layer.render()
+        #layer = self.layer[self.current_layer_index]
+        #result_image = layer.render()
         
-        '''
-        for layer in self.layer:
+        images = []
+        for layer in self.layer[::-1]:
           layer.render()
+          images.append(layer.result_image)
           
         # merge
-        prepare a new image t1
+
         
-        for each layer in self.layer:
-          merge layer.result_image onto t1
+        result = process.composite_image(images, self.viewport_width, self.viewport_height)
         
-        render this t1 onto the screen
-        
-        
-        '''
+
         
 
         # if cropping add crop layer on top of the merged result
         if self.crop_A_layer is not None and self.crop_B_layer is not None:
             merged_crop_image = process.merge_crop(self.crop_A_layer.image, self.crop_B_layer.image)
-            result_image = process.render_crop(result_image, merged_crop_image)
+            result = process.render_crop(result, merged_crop_image)
         elif self.crop_A_layer is not None:
-            result_image = process.render_crop(result_image, self.crop_A_layer.image)
+            result = process.render_crop(result, self.crop_A_layer.image)
         elif self.crop_B_layer is not None:
-            result_image = process.render_crop(result_image, self.crop_B_layer.image)
+            result = process.render_crop(result, self.crop_B_layer.image)
 
         # display final result
-        self.render_image(result_image)
+        self.render_image(result)
 
     def destroy_if_have(self, component):
         if len(self.filename) != 0 and component is not None:
@@ -177,13 +174,13 @@ class Application:
         self.lblImage = tk.Label(master=self.viewport, image=image1)
         self.lblImage.image = image1
 
-        mid_x_pos, mid_y_pos = 0, 0
-        if self.original_image.width > self.original_image.height:
-            mid_y_pos = self.viewport_height / 2 - self.original_image.height / 2 - 1
-        else:
-            mid_x_pos = self.viewport_width / 2 - self.original_image.width / 2 - 1
+        #mid_x_pos, mid_y_pos = 0, 0
+        # if self.original_image.width > self.original_image.height:
+        #     mid_y_pos = self.viewport_height / 2 - self.original_image.height / 2 - 1
+        # else:
+        #     mid_x_pos = self.viewport_width / 2 - self.original_image.width / 2 - 1
 
-        self.lblImage.place(x=mid_x_pos, y=mid_y_pos)
+        self.lblImage.place(x=0, y=0)
         self.register(self.viewport, self.lblImage)
 
     def update_current_layer(self, id):

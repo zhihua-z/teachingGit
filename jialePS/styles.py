@@ -1,4 +1,4 @@
-backgroundColor = '#000000'
-foregroundColor = '#ddddff'
+背景颜色 = '#000000'
+前景颜色 = '#ddddff'
 
-menuBackgroundColor = '#111111'
+菜单背景颜色 = '#111111'

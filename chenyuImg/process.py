@@ -191,3 +191,24 @@ def crop_image(img, Apos, Bpos):
         
     return img_t
     
+# input: a list of images
+# output: one image of given size
+def composite_image(images, canvas_width, canvas_height):
+    pass
+    # 使用canvas的大小生成一张新照片
+    # 把每一张照片的像素点吸收到这个新的canvas上
+    # output 这个canvas的照片
+    
+    canvas = Image.new("RGB", (canvas_width, canvas_height), color = (0, 0, 0))
+    
+    for img in images:
+        img_width = img.width
+        img_height = img.height
+        
+        for yi in range(img_height):
+            for xi in range(img_width):
+                pixel_color = img.getpixel((xi, yi))
+                
+                canvas.putpixel((xi, yi), pixel_color)
+    
+    return canvas

@@ -5,7 +5,8 @@ from MenuPage import MenuPage
 from Canvas import Canvas
 from TucengPage import TucengPage
 
-from SubMenu import TiaozhengPage, LiangduPage, GongnengPage
+
+from SubMenu import 调整页面, 图层页面, 功能页面
 
 class 菜单:
     def __init__(self, name, page):
@@ -22,20 +23,20 @@ class App:
         self.canvas = None
         self.tucengPage = None
         
-        self.tiaozhengPage = None
-        self.openTiaozhengPage = False
+        self.调整页面 = None
+        self.open调整页面 = False
         
         self.tuceng = [] # 保存所有的图层，每一个图层都是一张照片
         self.currenttuceng = None#记录当前图层是哪一个
         
-        self.tiaozhengPage = TiaozhengPage(80, 0, 200, 700, self)
-        self.liangdupage = LiangduPage(80, 0, 200, 700, self)
-        self.gongnengPage = GongnengPage(80, 0, 200, 700, self)
+        self.调整页面 = 调整页面(80, 0, 200, 700, self)
+        self.图层页面 = 图层页面(80, 0, 200, 700, self)
+        self.功能页面 = 功能页面(80, 0, 200, 700, self)
         
         self.caidanDict = {
-            '调整': 菜单('调整', self.tiaozhengPage),
-            '亮度': 菜单('亮度', self.liangdupage),
-            '功能': 菜单('功能', self.gongnengPage)
+            '调整': 菜单('调整', self.调整页面),
+            '亮度': 菜单('亮度', self.图层页面),
+            '功能': 菜单('功能', self.功能页面)
         }
     
     def draw(self):
@@ -47,6 +48,8 @@ class App:
         self.menuPage = MenuPage(0, 0, 80, 700, self)
         self.canvas = Canvas(80, 0, 1070, 700, self)
         self.tucengPage = TucengPage(1150, 0, 150, 700, self)
+        
+        self.menu = tk.Menu(master=self.window, tearoff=0)
         
         self.menuPage.draw()
         self.canvas.draw()
@@ -66,12 +69,14 @@ class App:
         if caidan.opened:
             self.canvas.setSize((1080, 700))
             self.canvas.setPosition((80, 0))
+            self.canvas.relativeposition = (200, 0)
             self.canvas.draw()
             
             caidan.opened = False
         else:
             self.canvas.setSize((870, 700))
             self.canvas.setPosition((280, 0))
+            self.canvas.relativeposition = (0, 0)
             self.canvas.draw()
             caidan.page.draw()
             
@@ -85,5 +90,10 @@ class App:
                 if caidan.name != caidan2.name:
                     caidan2.opened = False
                 
-        
+
+
+
+
+
+
                 

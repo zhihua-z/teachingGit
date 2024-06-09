@@ -112,3 +112,11 @@ class DBconnection:
         
         self.cursor.execute(querystr, (title, content, id))
         self.connection.commit()
+
+    def deleteChapter(self, id):
+        querystr = '''
+        delete from chapter where id = ?
+        '''
+        result = self.cursor.execute(querystr, (id,))
+        self.connection.commit()
+        return result

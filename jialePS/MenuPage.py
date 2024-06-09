@@ -4,7 +4,7 @@ from PIL import Image, ImageTk
 from Page import Page
 import styles
 
-from UI import ImageButton
+from UI import class图片按钮
 
 # Page 它会控制当前页面应该画什么
 class MenuPage(Page):
@@ -13,11 +13,11 @@ class MenuPage(Page):
     
     def draw(self):
         # 画出这个页面的分区
-        self.frame = tk.Frame(width=self.width, height=self.height, background=styles.menuBackgroundColor)
+        self.frame = tk.Frame(width=self.width, height=self.height, background=styles.菜单背景颜色)
         self.frame.place(x = self.posX, y = self.posY)
         self.register(self.frame)
         
-        self.tiaozheng = ImageButton(self.frame, 
+        self.tiaozheng = class图片按钮(self.frame, 
                                      'img/tiaozheng.png', 
                                      (35, 35),
                                      '调整',
@@ -26,7 +26,7 @@ class MenuPage(Page):
         self.register(self.tiaozheng)
         
         
-        self.liangdu = ImageButton(self.frame, 
+        self.liangdu = class图片按钮(self.frame, 
                                      'img/liangdu.png', 
                                      (35, 35),
                                      '亮度',
@@ -35,7 +35,7 @@ class MenuPage(Page):
         self.register(self.liangdu)
         
         
-        self.gongneng = ImageButton(self.frame, 
+        self.gongneng = class图片按钮(self.frame, 
                                      'img/button1.png', 
                                      (35, 35),
                                      '功能',

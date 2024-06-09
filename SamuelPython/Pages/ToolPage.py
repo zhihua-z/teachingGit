@@ -193,22 +193,22 @@ class ToolPage(Page):
     def save_file(self):
         # save the current chapter to db
         # change the state to saved
+
         current_time = datetime.now()
         
         book = self.app.currentBook
-        if book.localOnly:
+        if book is not None and book.localOnly:
             
             # 1. create a new book record in the database
             self.app.db.createBook(book.name, self.app.userid, current_time)
             
-            # 1.1 get the ID of the book we created just now
+             # 1.1 get the ID of the book we created just now
             bookresult = self.app.db.retrieveBookByCreatedTime(current_time)
             self.app.currentBookId = bookresult[0][0]
             book.localOnly = False
         
         
         chapter = self.app.currentChapter
-        
         title = chapter.title
         content = chapter.content
 
@@ -263,3 +263,10 @@ class ToolPage(Page):
         self.app.currentChapter = newChapter
         self.app.writeArea.draw()
         self.app.refresh() 
+        self.save_file()
+
+    def delete_file(self, chapter):
+        if not chapter.localOnly:
+          self.app.db.deleteChapter(chapter.id)
+          self.app.book.removeChapter(chapter)
+        self.app.refresh()
